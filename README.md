@@ -13,7 +13,7 @@ A How To for the setup.
 
     `npm install -g express`
 
-3. clone into repository found here
+3. clone into repository found [here](https://www.github.com/DrewMcArthur/node-express-server)
 
     `git clone git@github.com:DrewMcArthur/node-express-server.git`
 
@@ -29,6 +29,6 @@ A How To for the setup.
 
 7. Profit!
 
-8. Your Web Server is now running at `http://localhost:1337`
+8. Your Web Server is now running at [`http://localhost:1337`](http://localhost:1337)
 
 NOTE:  some commands may require root privelages, i.e. `sudo`.  See 1,2, and 4
