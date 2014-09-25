@@ -1,7 +1,11 @@
+/*
+ * This file (I think) provides what to do for when you run 'npm install'
+ * I could be wrong though, I don't actually know what I'm doing.
+ */
 {
-    "name": "application-name"
+    "name": "node-webserver"
   , "version": "0.0.1"
-  , "private": true
+  , "private": false
   , "dependencies": {
       "express": "4.9.4"
   }
