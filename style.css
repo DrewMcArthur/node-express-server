@@ -1,0 +1,88 @@
+* {
+	font-family:'Lato','Ubuntu', sans-serif;
+	font-weight:300;
+}
+body {
+	margin:0;
+	height:100%;
+}
+/*
+div.wrapper {
+	max-width:1200px;
+	margin:auto;
+	position:relative;
+	height:inherit;
+}
+div#header,
+div#footer {
+	position:fixed;
+	background-color:#313131;
+	color:white;
+	height:50px;
+	max-width:inherit;
+	width:100%;
+	transition-duration:.5s;
+	transition-property:height,width,margin-left;
+}
+div#header {
+	top:0px;
+}
+.drewmcarthur { 
+	padding: 15px; 
+	font-size:18px;
+	height:20px;
+	width:auto;
+	float:left;
+	color:white;
+	cursor:default;
+	transition-duration:.5s;
+	transition-property:padding,height,width,margin-left;
+}
+div.drewmcarthur:hover {
+	background-color:black;
+}
+div#main {
+	height:76.4%;
+	padding:75px 10px;
+}
+div#main div.countdown {
+	font-size:15em;
+}
+div#footer {
+	position:fixed;
+	bottom:0px;
+}
+img.footer-link {
+	height:36px;
+	padding:7px;
+	float:right;
+	cursor:default;
+	transition: height .5s, padding .5s;
+}
+img.footer-link:hover {
+	background-color:black;
+}
+
+/*
+ * when header/footer is mini, this applies
+ */
+
+/*
+div#header.mini,
+div#footer.mini {
+	height:30px;
+	width:30%;
+	margin-left:70%;
+}
+
+div#header.mini div.drewmcarthur,
+div#footer.mini div.drewmcarthur {
+	padding:5px;	
+}
+
+div#header.mini img.footer-link,
+div#footer.mini img.footer-link {
+	height:20px;
+	padding:5px;
+}
+*/
