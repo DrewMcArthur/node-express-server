@@ -1,8 +1,9 @@
 {
-    "name": "node-webserver"
-  , "version": "0.0.1"
-  , "private": false
-  , "dependencies": {
-      "express": "4.9.4"
+  "name": "socketio-chatserver",
+  "description": "my first socket.io app",
+  "version": "0.0.1",
+  "private": false,
+  "dependencies": {
+    "express": "~4.9.4"
   }
 }
