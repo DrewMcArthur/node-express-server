@@ -1,8 +1,11 @@
 var express = require('express');
 var app = express();
 
+app.use(express.static(__dirname + '/styles'));
+app.use(express.static(__dirname + '/scripts'));
+
 app.get('/', function(req, res){		//when someone loads '/' (the home page) 
-  res.sendFile(__dirname + '/index.html');		//then send them the file located at '/index.html'.  
+	res.sendFile(__dirname + '/index.html');		//then send them the file located at '/index.html'.  
 	console.log('Someone loaded \'/\'!');
 });
 
