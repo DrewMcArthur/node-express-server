@@ -1,8 +1,7 @@
 var express = require('express');
 var app = express();
 
-app.use(express.static(__dirname + '/styles'));
-app.use(express.static(__dirname + '/scripts'));
+app.use(express.static(__dirname + '/public'));
 
 app.get('/', function(req, res){		//when someone loads '/' (the home page) 
 	res.sendFile(__dirname + '/index.html');		//then send them the file located at '/index.html'.  
@@ -11,6 +10,7 @@ app.get('/', function(req, res){		//when someone loads '/' (the home page)
 
 app.get(/^\/name\/(\w+)(?:\.\.(\w+))?$/, function(req, res){
 	var name = req.params[0];
+	console.log(name);
 	res.send('Hello ' + name);
 });
 
