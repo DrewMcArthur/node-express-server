@@ -7,6 +7,11 @@ app.use(express.static(__dirname + '/public'));
 
 io.on('connection', function(socket){
 	console.log('connection made');
+  socket.on('disconnect', function(){
+		var name = "A user";	//function doesn't have input yet for name
+		var left = name + " left the chat.";
+		io.emit('chat message', left);
+  });
 	socket.emit('ask name');
 	socket.on('answer name', function(name){
 		var entered = name + " entered the chat!";
