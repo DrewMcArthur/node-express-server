@@ -24,21 +24,31 @@ $(document).ready(function(){
 	var messageheight = $(document).height()-42;
 	$('#messages').css('max-height',messageheight);
 });
+function mobileInputLocation(){
+	if(isMobile){
+		if($('input').val()){
+			/*
+			$('#messages').css('max-height', ($(document).height()-42)/2);
+			$('body').scrollBottom($('body')[0].scrollHeight);
+			*/
+			$('form').css('bottom','50%');
+		}else{
+			$('form').css('bottom','0');
+		}
+	}
+}
 function typing(name){
 	if($('input').val()){
 		/*
 		console.log(name+' is typing');
 		socket.emit('typing check', name);
 		*/
-		if(isMobile){
-			$('body').scrollTop($('body')[0].scrollHeight);
-		}
 	}
 };
 function engine(){
 	setInterval(function(){
 		typing(name);
-	},1000);
+	},10);
 };
 $(document).ready(function(){
 	engine();
