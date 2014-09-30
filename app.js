@@ -66,13 +66,11 @@ io.on('connection', function(socket){ //on connection to a socket,
 	});
 
 	socket.on('chat message', function(msg){ //when the socket says the client sent a message,
-		io.emit('chat message', msg); //tell all of the clients that there is a new message, and give it to them
-		fs.appendFile(__dirname + "/public/messages.log", msg + "\n", function(err) {
-			if(err) {
-				console.log(err);
-			} else {
-				console.log(msg);
-			}
+		var name = users[UID]; //get name by UID
+		var timestamp = new Date(); // timestamp is current time
+		io.emit('chat message', name + ": " + msg); //tell all of the clients that there is a new message, and give it to them
+		fs.appendFile(__dirname + "/public/messages.log", timestamp + "	"+ name + ": " + msg + "\n", function(err) { // add message, name and timestamp to log file
+			if(err) { console.log(err); }
 		}); 
 	});
 

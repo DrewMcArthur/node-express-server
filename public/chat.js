@@ -11,7 +11,7 @@ if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
 
 $('form').submit(function(){ //when user presses 'send'
 	if($('#m').val()){ //prevents sending of blank messages
-		socket.emit('chat message', name + ": " + $('#m').val()); 
+		socket.emit('chat message', $('#m').val()); 
 		//send an event 'chat message' to the server
 		$('#m').val(''); //clear form
 	}
