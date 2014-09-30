@@ -83,11 +83,9 @@ io.on('connection', function(socket){ //on connection to a socket,
 		};
 		io.emit('chat message', msg); //tell all of the clients that there is a new message, and give it to them
 		console.log(msg);
-/*
-		fs.appendFile(__dirname + "/public/messages.log", timestamp + "	"+ name + "	" + msg + "\n", function(err) { // add message, name and timestamp to log file
+		fs.appendFile(__dirname + "/public/messages.log", msg.timestamp + "	"+ msg.name + "	" + msg.body + "\n", function(err) { // add message, name and timestamp to log file
 			if(err) { console.log(err); }
 		}); 
-*/
 	});
 
 	socket.on('disconnect', function(){ //when the client disconnects from the server, 
