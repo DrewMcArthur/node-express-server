@@ -43,16 +43,23 @@ io.on('connection', function(socket){ //on connection to a socket,
 		var entered = name + " entered the chat!"; //a person just entered the chat
 		users[UID] = name; //all names of people online
 		console.log("user " + UID + " with name " + users[UID] + " is online;"); // notify server that user is online
-		numOfUsersOnline++; // increase number online by 1
-		var nOnline = numOfUsersOnline + " users are online."; // number of people online
+
+		var nOnline = numOfUsersOnline + " other users are online."; // number of people online if 3+
+		var n1Online = numOfUsersOnline + " other user is online."; // number of people online if only 2
 		var uOnline = "Online: " + userList; // users online
+
+		numOfUsersOnline++; // increase number online by 1
 
 		makeUserList(); //iterate through users, and make an array without all of the holes
 		console.log(userList); // log users online
 
 		//says [user entered] to everyone, tells newb how many and who is online.
 		if(numOfUsersOnline>1){ //if there's someone else online, then
-			socket.emit('chat message', nOnline); // tell client that just entered how many are online
+			if(numOfUsersOnline==2){
+				socket.emit('chat message',n1Online); //number of people online if only 1 other person
+			} else {
+				socket.emit('chat message', nOnline); // tell client that just entered how many are online
+			}
 			socket.emit('chat message', uOnline); // tell client that just entered who is online
 			io.emit('chat message', entered);//this should be changed so that it only broadcasts to all of the other sockets, and not itself.
 		} else { // otherwise, if you're the only one on the server
