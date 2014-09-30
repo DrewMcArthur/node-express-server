@@ -36,9 +36,6 @@ io.on('connection', function(socket){ //on connection to a socket,
 	
 	var UID = random;
 
-	console.log("UID");
-	console.log(UID);
-
 	socket.emit('ask name'); //ask the server what the user's name is 
 
 	socket.on('answer name', function(name){ // when the client responds, 
