@@ -127,7 +127,7 @@ Date.prototype.toLocalString = function() { // concat time strings to form one w
 		pad( this.getDate() ) +
 		pad( this.getHours() ) +
 		pad( this.getMinutes() ) +
-    pad( this.getSeconds() )
+		pad( this.getSeconds() )
   );
 };
 
