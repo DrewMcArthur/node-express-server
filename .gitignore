@@ -32,3 +32,5 @@ node_modules
 
 # server-reset script
 pull-and-restart.sh
+restart.sh
+
