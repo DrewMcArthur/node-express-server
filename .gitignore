@@ -29,3 +29,6 @@ node_modules
 
 # swap files
 *.swp
+
+# server-reset script
+pull-and-restart.sh
