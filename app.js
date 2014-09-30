@@ -16,7 +16,7 @@ io.on('connection', function(socket){ //on connection to a socket,
 	var random = Math.ceil(Math.random() * uidCeil); //set a UID to a random number
 
 	while(users[random] != null){ // try doing this, and if the UID is taken, keep repeating it
-		if(users[random] != null){
+		if(users[random] != null){ // if UID is taken
 			random = Math.ceil(Math.random() * uidCeil); // get new random number for UID
 		}
 /*  attempt at error if while loop goes too long.  just have to hope that doesn't happen, i guess.
@@ -83,9 +83,9 @@ io.on('connection', function(socket){ //on connection to a socket,
 		if(seconds<10){seconds = ""+0+seconds;}
 		var timestamp = (new Date()).toISOString().replace(/\.\d+\D/g,"").replace(/[^0-9]/g, "");// ""+year+month+date+hours+minutes+seconds // timestamp is current time in format YYMMDDHHMMSS
 		*/
-		var timestamp = (new Date()).toLocalString();
+		var timestamp = (new Date()).toLocalString(); // call new time string format
 		io.emit('chat message', name + ": " + msg); //tell all of the clients that there is a new message, and give it to them
-		fs.appendFile(__dirname + "/public/messages.log", timestamp + "	"+ name + ": " + msg + "\n", function(err) { // add message, name and timestamp to log file
+		fs.appendFile(__dirname + "/public/messages.log", timestamp + "	"+ name + "	" + msg + "\n", function(err) { // add message, name and timestamp to log file
 			if(err) { console.log(err); }
 		}); 
 	});
@@ -113,20 +113,20 @@ function makeUserList(){
 		}
 	}
 }
-function pad(number) {
-  if ( number < 10 ) {
+function pad(number) { // used for time, to make sure the date isn't returned as 1491 instead of 140901
+  if ( number < 10 ) { 
     return '0' + number;
   }
   return number;
 }
 
-Date.prototype.toLocalString = function() {
-  return (
-  	pad( this.getYear() - 100 ) +
-    pad( this.getMonth() + 1 ) +
-    pad( this.getDate() ) +
-    pad( this.getHours() ) +
-    pad( this.getMinutes() ) +
+Date.prototype.toLocalString = function() { // concat time strings to form one with format YYMMDDhhmmss
+	return (
+		pad( this.getYear() - 100 ) +
+		pad( this.getMonth() + 1 ) +
+		pad( this.getDate() ) +
+		pad( this.getHours() ) +
+		pad( this.getMinutes() ) +
     pad( this.getSeconds() )
   );
 };
