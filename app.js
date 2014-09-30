@@ -67,7 +67,20 @@ io.on('connection', function(socket){ //on connection to a socket,
 
 	socket.on('chat message', function(msg){ //when the socket says the client sent a message,
 		var name = users[UID]; //get name by UID
-		var timestamp = new Date(); // timestamp is current time
+		//all getting current time stuff not as complicated as it looks
+		var year = new Date().getYear()-100; //get current Year
+		if(year<10){year = ""+0+year;} //if year is <10, then add 0 to front
+		var month = new Date().getMonth()+1;
+		if(month<10){month = ""+0+month;}
+		var date = new Date().getDate();
+		if(date<10){date = ""+0+date;}
+		var hours	= new Date().getHours();
+		if(hours<10){hours = ""+0+hours;}
+		var minutes = new Date().getMinutes();
+		if(minutes<10){minutes = ""+0+minutes;}
+		var seconds = new Date().getSeconds();
+		if(seconds<10){seconds = ""+0+seconds;}
+		var timestamp = ""+year+month+date+hours+minutes+seconds // timestamp is current time in format YYMMDDHHMMSS
 		io.emit('chat message', name + ": " + msg); //tell all of the clients that there is a new message, and give it to them
 		fs.appendFile(__dirname + "/public/messages.log", timestamp + "	"+ name + ": " + msg + "\n", function(err) { // add message, name and timestamp to log file
 			if(err) { console.log(err); }
