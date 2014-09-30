@@ -39,6 +39,7 @@ io.on('connection', function(socket){ //on connection to a socket,
 	socket.emit('ask name'); //ask the server what the user's name is 
 
 	socket.on('answer name', function(name){ // when the client responds, 
+
 		var entered = name + " entered the chat!"; //a person just entered the chat
 		users[UID] = name; //all names of people online
 		console.log("user " + UID + " with name " + users[UID] + " is online;"); // notify server that user is online
@@ -48,13 +49,13 @@ io.on('connection', function(socket){ //on connection to a socket,
 
 		makeUserList(); //iterate through users, and make an array without all of the holes
 		console.log(userList); // log users online
+
 		//says [user entered] to everyone, tells newb how many and who is online.
-		
-		if(numOfUsersOnline>1){
+		if(numOfUsersOnline>1){ //if there's someone else online, then
 			socket.emit('chat message', nOnline); // tell client that just entered how many are online
 			socket.emit('chat message', uOnline); // tell client that just entered who is online
 			io.emit('chat message', entered);//this should be changed so that it only broadcasts to all of the other sockets, and not itself.
-		} else {
+		} else { // otherwise, if you're the only one on the server
 			socket.emit('chat message', "You are the only user currently online.");
 		}
 
@@ -66,6 +67,13 @@ io.on('connection', function(socket){ //on connection to a socket,
 
 	socket.on('chat message', function(msg){ //when the socket says the client sent a message,
 		io.emit('chat message', msg); //tell all of the clients that there is a new message, and give it to them
+		fs.appendFile(__dirname + "/public/messages.log", msg + "\n", function(err) {
+			if(err) {
+				console.log(err);
+			} else {
+				console.log(msg);
+			}
+		}); 
 	});
 
 	socket.on('disconnect', function(){ //when the client disconnects from the server, 
@@ -88,7 +96,6 @@ function makeUserList(){
 		if(users[i] != null){ //if the array is not null at index i, 
 			userList[j] = users[i]; //set userList to that value at index j
 			j++; // and increment j
-		}else{ // I don't think I need the else
 		}
 	}
 }
