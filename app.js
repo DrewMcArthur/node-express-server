@@ -81,8 +81,9 @@ io.on('connection', function(socket){ //on connection to a socket,
 		if(minutes<10){minutes = ""+0+minutes;}
 		var seconds = new Date().getSeconds();
 		if(seconds<10){seconds = ""+0+seconds;}
-		*/
 		var timestamp = (new Date()).toISOString().replace(/\.\d+\D/g,"").replace(/[^0-9]/g, "");// ""+year+month+date+hours+minutes+seconds // timestamp is current time in format YYMMDDHHMMSS
+		*/
+		var timestamp = (new Date()).toLocalString();
 		io.emit('chat message', name + ": " + msg); //tell all of the clients that there is a new message, and give it to them
 		fs.appendFile(__dirname + "/public/messages.log", timestamp + "	"+ name + ": " + msg + "\n", function(err) { // add message, name and timestamp to log file
 			if(err) { console.log(err); }
@@ -112,6 +113,23 @@ function makeUserList(){
 		}
 	}
 }
+function pad(number) {
+  if ( number < 10 ) {
+    return '0' + number;
+  }
+  return number;
+}
+
+Date.prototype.toLocalString = function() {
+  return (
+  	pad( this.getYear() - 100 ) +
+    pad( this.getMonth() + 1 ) +
+    pad( this.getDate() ) +
+    pad( this.getHours() ) +
+    pad( this.getMinutes() ) +
+    pad( this.getSeconds() )
+  );
+};
 
 http.listen(1337, function(){ //listen for requests at ipaddress:1337
 	console.log("Server is running on port 1337");		//callback function, completely optional.
