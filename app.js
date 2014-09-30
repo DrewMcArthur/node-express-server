@@ -56,14 +56,15 @@ io.on('connection', function(socket){ //on connection to a socket,
 		//says [user entered] to everyone, tells newb how many and who is online.
 		if(numOfUsersOnline>1){ //if there's someone else online, then
 			if(numOfUsersOnline==2){
-				socket.emit('chat message',n1Online); //number of people online if only 1 other person
+				socket.emit('chat message',serverMessage(n1Online)); //number of people online if only 1 other person
 			} else {
-				socket.emit('chat message', nOnline); // tell client that just entered how many are online
+				socket.emit('chat message', serverMessage(nOnline)); // tell client that just entered how many are online
 			}
-			socket.emit('chat message', uOnline); // tell client that just entered who is online
-			io.emit('chat message', entered);//this should be changed so that it only broadcasts to all of the other sockets, and not itself.
+			socket.emit('chat message', serverMessage(uOnline)); // tell client that just entered who is online
+			console.log(serverMessage(uOnline));
+			io.emit('chat message', serverMessage(entered));//this should be changed so that it only broadcasts to all of the other sockets, and not itself.
 		} else { // otherwise, if you're the only one on the server
-			socket.emit('chat message', "You are the only user currently online.");
+			socket.emit('chat message', serverMessage("You are the only user currently online."));
 		}
 
 	}); // end what happens when the client answers with the user's name
@@ -72,35 +73,27 @@ io.on('connection', function(socket){ //on connection to a socket,
 		io.emit('typing', name);
 	});
 
-	socket.on('chat message', function(msg){ //when the socket says the client sent a message,
+	socket.on('chat message', function(body){ //when the socket says the client sent a message,
 		var name = users[UID]; //get name by UID
-		//all getting current time stuff not as complicated as it looks
-		/*
-		var year = new Date().getYear()-100; //get current Year
-		if(year<10){year = ""+0+year;} //if year is <10, then add 0 to front
-		var month = new Date().getMonth()+1;
-		if(month<10){month = ""+0+month;}
-		var date = new Date().getDate();
-		if(date<10){date = ""+0+date;}
-		var hours	= new Date().getHours();
-		if(hours<10){hours = ""+0+hours;}
-		var minutes = new Date().getMinutes();
-		if(minutes<10){minutes = ""+0+minutes;}
-		var seconds = new Date().getSeconds();
-		if(seconds<10){seconds = ""+0+seconds;}
-		var timestamp = (new Date()).toISOString().replace(/\.\d+\D/g,"").replace(/[^0-9]/g, "");// ""+year+month+date+hours+minutes+seconds // timestamp is current time in format YYMMDDHHMMSS
-		*/
 		var timestamp = (new Date()).toLocalString(); // call new time string format
-		io.emit('chat message', name + ": " + msg); //tell all of the clients that there is a new message, and give it to them
+		var msg = { // messages are now sent as an object, with this format.  MSGOJB
+			name:name,
+			timestamp:timestamp,
+			body:body
+		};
+		io.emit('chat message', msg); //tell all of the clients that there is a new message, and give it to them
+		console.log(msg);
+/*
 		fs.appendFile(__dirname + "/public/messages.log", timestamp + "	"+ name + "	" + msg + "\n", function(err) { // add message, name and timestamp to log file
 			if(err) { console.log(err); }
 		}); 
+*/
 	});
 
 	socket.on('disconnect', function(){ //when the client disconnects from the server, 
 		name = users[UID]; // sets var name to be the name found in the array users by the UID
 		var left = name + " left the chat."; //tells everyone that user left
-		io.emit('chat message', left); 
+		io.emit('chat message', serverMessage(left));
 		numOfUsersOnline--; //still need to remove name from names array
 		users[UID] = null; //removes userid from array of taken uids
 		makeUserList(); //see :30
@@ -120,6 +113,16 @@ function makeUserList(){
 		}
 	}
 }
+
+function serverMessage(msgBody) { 
+	msg = {
+		body:msgBody,
+		name:"Server",
+		timestamp:(new Date()).toLocalString()
+	}
+	return msg;
+}
+
 function pad(number) { // used for time, to make sure the date isn't returned as 1491 instead of 140901
   if ( number < 10 ) { 
     return '0' + number;
@@ -141,7 +144,3 @@ Date.prototype.toLocalString = function() { // concat time strings to form one w
 http.listen(1337, function(){ //listen for requests at ipaddress:1337
 	console.log("Server is running on port 1337");		//callback function, completely optional.
 });
-
-
-
-

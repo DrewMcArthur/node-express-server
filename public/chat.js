@@ -19,7 +19,7 @@ $('form').submit(function(){ //when user presses 'send'
 }); //end form submit function
 
 socket.on('chat message', function(msg){ //when the server sends a chat message, 
-	$('#messages').append($('<li>').text(msg)); //append a message as an li
+	$('#messages').append($('<li>').text(msg.name + ":	" + msg.body)); //append a message as an li
 	$('#messages').scrollTop($('#messages')[0].scrollHeight); //and scroll to the bottom of the page
 });
 
