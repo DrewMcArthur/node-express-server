@@ -82,7 +82,7 @@ io.on('connection', function(socket){ //on connection to a socket,
 		var seconds = new Date().getSeconds();
 		if(seconds<10){seconds = ""+0+seconds;}
 		*/
-		var timestamp = (new Date()).toISOString().replace(/\.\d\d\d\w/g,"").replace(/[^0-9]/g, "");// ""+year+month+date+hours+minutes+seconds // timestamp is current time in format YYMMDDHHMMSS
+		var timestamp = (new Date()).toISOString().replace(/\.\d+\D/g,"").replace(/[^0-9]/g, "");// ""+year+month+date+hours+minutes+seconds // timestamp is current time in format YYMMDDHHMMSS
 		io.emit('chat message', name + ": " + msg); //tell all of the clients that there is a new message, and give it to them
 		fs.appendFile(__dirname + "/public/messages.log", timestamp + "	"+ name + ": " + msg + "\n", function(err) { // add message, name and timestamp to log file
 			if(err) { console.log(err); }
