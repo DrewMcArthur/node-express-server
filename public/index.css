@@ -1,0 +1,10 @@
+* {
+	font-family:'Lato','Ubuntu', sans-serif;
+	font-weight:300;
+}
+body {
+	margin:0 auto;
+	height:100%;
+	width:auto;
+	max-width:1200px;
+}
