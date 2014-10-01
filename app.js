@@ -136,7 +136,7 @@ Date.prototype.toLocalString = function() { // concat time strings to form one w
 		pad( this.getHours() ) +
 		pad( this.getMinutes() ) +
 		pad( this.getSeconds() )
-  );
+	);
 };
 
 http.listen(1337, function(){ //listen for requests at ipaddress:1337
