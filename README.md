@@ -3,6 +3,10 @@ node-express-server
 
 An attempt at a web server using Node.js and Express
 
+This branch is currently being hosted at DrewMcArthur.ddns.net
+
+Open the page and click Chat App.
+
 A How To for the setup. 
 
 1. Install node.js, npm, and git
