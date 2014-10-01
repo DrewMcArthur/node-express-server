@@ -29,7 +29,7 @@ io.on('connection', function(socket){ //on connection to a socket,
 
 		var entered = name + " entered the chat!"; //a person just entered the chat
 		users[UID] = name; //all names of people online
-		logger(serverMessage("user " + UID + " with name " + users[UID] + " is online;")); // notify server that user is online
+		logger(serverMessage('user ' + UID + ' with name ' + users[UID] + ' is online;')); // notify server that user is online
 
 		var nOnline = numOfUsersOnline + " other users are online."; // number of people online if 3+
 		var n1Online = numOfUsersOnline + " other user is online."; // number of people online if only 2
@@ -79,7 +79,7 @@ io.on('connection', function(socket){ //on connection to a socket,
 		numOfUsersOnline--; //still need to remove name from names array
 		users[UID] = null; //removes userid from array of taken uids
 		makeUserList(); //see :30
-		logger(serverMessage("user " + UID + " with name " + users[UID] + " is offline;")); // notify server that user is offline
+		logger(serverMessage('user ' + UID + ' with name ' + users[UID] + ' is offline;')); // notify server that user is offline
 		logger(serverMessage(JSON.stringify(userList))); // log users online
 	});
 
@@ -97,18 +97,19 @@ function makeUserList(){
 }
 
 function serverMessage(msgBody) { 
-	msg = {
+	msgFromServer = {
 		name:"Server",
 		timestamp:(new Date()).toLocalString(),
 		body:msgBody
 	}
-	return msg;
+	return msgFromServer;
 }
 function logger(message){
 	console.log(message);
+	console.log(message.timestamp + "	" + message.name + "	" + message.body + "\n");
 	fs.appendFile(
 		__dirname + "/public/messages.log", 
-		message.timestamp + "	" + msg.name + "	" + msg.body + "\n", 
+		message.timestamp + "	" + message.name + "	" + message.body + "\n", 
 		function(err){ 
 			if(err) { console.log(err); } 
 		}
@@ -135,5 +136,5 @@ Date.prototype.toLocalString = function() { // concat time strings to form one w
 };
 
 http.listen(1337, function(){ //listen for requests at ipaddress:1337
-	logger(serverMessage("Server is running on port 1337"));		//callback function, completely optional.
+	logger(serverMessage('Server is running on port 1337'));		//callback function, completely optional.
 });
