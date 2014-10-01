@@ -111,9 +111,7 @@ function makeUserList(){
 
 function serverMessage(msgBody) { 
 	msg = {
-		body:msgBody,
-		name:"Server",
-		timestamp:(new Date()).toLocalString()
+		body:msgBody,	name:"Server",	timestamp:(new Date()).toLocalString()
 	}
 	return msg;
 }
