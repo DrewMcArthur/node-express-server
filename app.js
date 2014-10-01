@@ -42,7 +42,7 @@ io.on('connection', function(socket){ //on connection to a socket,
 
 		var entered = name + " entered the chat!"; //a person just entered the chat
 		users[UID] = name; //all names of people online
-		console.log("user " + UID + " with name " + users[UID] + " is online;"); // notify server that user is online
+		logger("user " + UID + " with name " + users[UID] + " is online;"); // notify server that user is online
 
 		var nOnline = numOfUsersOnline + " other users are online."; // number of people online if 3+
 		var n1Online = numOfUsersOnline + " other user is online."; // number of people online if only 2
@@ -51,7 +51,7 @@ io.on('connection', function(socket){ //on connection to a socket,
 		numOfUsersOnline++; // increase number online by 1
 
 		makeUserList(); //iterate through users, and make an array without all of the holes
-		console.log(userList); // log users online
+		logger(userList); // log users online
 
 		//says [user entered] to everyone, tells newb how many and who is online.
 		if(numOfUsersOnline>1){ //if there's someone else online, then
@@ -61,7 +61,7 @@ io.on('connection', function(socket){ //on connection to a socket,
 				socket.emit('chat message', serverMessage(nOnline)); // tell client that just entered how many are online
 			}
 			socket.emit('chat message', serverMessage(uOnline)); // tell client that just entered who is online
-			console.log(serverMessage(uOnline));
+			logger(serverMessage(uOnline));
 			io.emit('chat message', serverMessage(entered));//this should be changed so that it only broadcasts to all of the other sockets, and not itself.
 		} else { // otherwise, if you're the only one on the server
 			socket.emit('chat message', serverMessage("You are the only user currently online."));
@@ -82,10 +82,7 @@ io.on('connection', function(socket){ //on connection to a socket,
 			body:body
 		};
 		io.emit('chat message', msg); //tell all of the clients that there is a new message, and give it to them
-		console.log(msg);
-		fs.appendFile(__dirname + "/public/messages.log", msg.timestamp + "	"+ msg.name + "	" + msg.body + "\n", function(err) { // add message, name and timestamp to log file
-			if(err) { console.log(err); }
-		}); 
+		logger(msg);
 	});
 
 	socket.on('disconnect', function(){ //when the client disconnects from the server, 
@@ -95,8 +92,8 @@ io.on('connection', function(socket){ //on connection to a socket,
 		numOfUsersOnline--; //still need to remove name from names array
 		users[UID] = null; //removes userid from array of taken uids
 		makeUserList(); //see :30
-		console.log("user " + UID + " with name " + users[UID] + " is offline;"); // notify server that user is offline
-		console.log(userList); // log users online
+		logger("user " + UID + " with name " + users[UID] + " is offline;"); // notify server that user is offline
+		logger(userList); // log users online
 	});
 
 });
@@ -120,6 +117,10 @@ function serverMessage(msgBody) {
 	}
 	return msg;
 }
+function logger(messsage){
+	console.log(message);
+	fs.appendFile(__dirname + "/public/messages.log", message, function(err){ if(err) { console.log(err); } });
+}
 
 function pad(number) { // used for time, to make sure the date isn't returned as 1491 instead of 140901
   if ( number < 10 ) { 
@@ -141,5 +142,5 @@ Date.prototype.toLocalString = function() { // concat time strings to form one w
 };
 
 http.listen(1337, function(){ //listen for requests at ipaddress:1337
-	console.log("Server is running on port 1337");		//callback function, completely optional.
+	logger(serverMessage("Server is running on port 1337"));		//callback function, completely optional.
 });
