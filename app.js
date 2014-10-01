@@ -117,7 +117,7 @@ function serverMessage(msgBody) {
 	}
 	return msg;
 }
-function logger(messsage){
+function logger(message){
 	console.log(message);
 	fs.appendFile(__dirname + "/public/messages.log", message, function(err){ if(err) { console.log(err); } });
 }
