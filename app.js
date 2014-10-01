@@ -42,7 +42,7 @@ io.on('connection', function(socket){ //on connection to a socket,
 
 		var entered = name + " entered the chat!"; //a person just entered the chat
 		users[UID] = name; //all names of people online
-		logger("user " + UID + " with name " + users[UID] + " is online;"); // notify server that user is online
+		logger(serverMessage("user " + UID + " with name " + users[UID] + " is online;")); // notify server that user is online
 
 		var nOnline = numOfUsersOnline + " other users are online."; // number of people online if 3+
 		var n1Online = numOfUsersOnline + " other user is online."; // number of people online if only 2
@@ -51,7 +51,7 @@ io.on('connection', function(socket){ //on connection to a socket,
 		numOfUsersOnline++; // increase number online by 1
 
 		makeUserList(); //iterate through users, and make an array without all of the holes
-		logger(userList); // log users online
+		logger(serverMessage(userList)); // log users online
 
 		//says [user entered] to everyone, tells newb how many and who is online.
 		if(numOfUsersOnline>1){ //if there's someone else online, then
@@ -111,7 +111,9 @@ function makeUserList(){
 
 function serverMessage(msgBody) { 
 	msg = {
-		body:msgBody,	name:"Server",	timestamp:(new Date()).toLocalString()
+		name:"Server",
+		timestamp:(new Date()).toLocalString(),
+		body:msgBody
 	}
 	return msg;
 }
