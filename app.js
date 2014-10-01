@@ -19,19 +19,6 @@ io.on('connection', function(socket){ //on connection to a socket,
 		if(users[random] != null){ // if UID is taken
 			random = Math.ceil(Math.random() * uidCeil); // get new random number for UID
 		}
-/*  attempt at error if while loop goes too long.  just have to hope that doesn't happen, i guess.
- 
-		if(10000<ifThisGetsTooBigThenQuit){
-			fs.writeFile("/error.log", "The while loop ran for too long, sorry. Here's the random number we stopped on: "+ random, function(err) {
-				if(err) {
-					console.log(err);
-				} else {
-					console.log("The file was saved!");
-				}
-			}); 
-			process.exit("error");
-		}; // if the while loop goes for too long, then stop the server, and save an error.log
-*/
 	}
 	
 	var UID = random;
@@ -51,7 +38,7 @@ io.on('connection', function(socket){ //on connection to a socket,
 		numOfUsersOnline++; // increase number online by 1
 
 		makeUserList(); //iterate through users, and make an array without all of the holes
-		logger(serverMessage(userList)); // log users online
+		logger(serverMessage(JSON.stringify(userList))); // log users online
 
 		//says [user entered] to everyone, tells newb how many and who is online.
 		if(numOfUsersOnline>1){ //if there's someone else online, then
@@ -92,8 +79,8 @@ io.on('connection', function(socket){ //on connection to a socket,
 		numOfUsersOnline--; //still need to remove name from names array
 		users[UID] = null; //removes userid from array of taken uids
 		makeUserList(); //see :30
-		logger("user " + UID + " with name " + users[UID] + " is offline;"); // notify server that user is offline
-		logger(userList); // log users online
+		logger(serverMessage("user " + UID + " with name " + users[UID] + " is offline;")); // notify server that user is offline
+		logger(serverMessage(JSON.stringify(userList))); // log users online
 	});
 
 });
@@ -119,17 +106,23 @@ function serverMessage(msgBody) {
 }
 function logger(message){
 	console.log(message);
-	fs.appendFile(__dirname + "/public/messages.log", message, function(err){ if(err) { console.log(err); } });
-}
-
-function pad(number) { // used for time, to make sure the date isn't returned as 1491 instead of 140901
-  if ( number < 10 ) { 
-    return '0' + number;
-  }
-  return number;
+	fs.appendFile(
+		__dirname + "/public/messages.log", 
+		message.timestamp + "	" + msg.name + "	" + msg.body + "\n", 
+		function(err){ 
+			if(err) { console.log(err); } 
+		}
+	);
 }
 
 Date.prototype.toLocalString = function() { // concat time strings to form one with format YYMMDDhhmmss
+	function pad(number) { // used for time, to make sure the date isn't returned as 1491 instead of 140901
+	  if ( number < 10 ) { 
+	    return '0' + number;
+	  }
+	  return number;
+	}
+
 	return (
 		"" + 
 		pad( this.getYear() - 100 ) +
