@@ -130,6 +130,7 @@ function pad(number) { // used for time, to make sure the date isn't returned as
 
 Date.prototype.toLocalString = function() { // concat time strings to form one with format YYMMDDhhmmss
 	return (
+		"" + 
 		pad( this.getYear() - 100 ) +
 		pad( this.getMonth() + 1 ) +
 		pad( this.getDate() ) +
