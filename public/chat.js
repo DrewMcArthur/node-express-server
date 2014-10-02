@@ -1,6 +1,7 @@
 var socket = io();
 var name;
 var isMobile;
+var isTyping;
 
 if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) { 
 	//tests if device is a hand held and creates boolean isMobile  (true if mobile, else false)
@@ -26,17 +27,14 @@ socket.on('chat message', function(msg){ //when the server sends a chat message,
 socket.on('ask name', function(){ //when the server asks for your name, 
 	name = prompt("Please enter your name",""); // prompt for the name
 	socket.emit('answer name', name); // and answer the server
+	$('form').focus();
 });	
 
-socket.on('typing',function(name){ // when the server says someone is typing, then
-	//socket.emit('chat message', name + " is typing!");//old syntax
+/*
+socket.on('userTyping',function(userName){ // when the server says someone is typing, then
+	userTyping(userName); // userName is the name of the person typing, sent from the server.  not the name of the current user.
 });
-
-$(document).ready(function(){
-	var messageheight = $(document).height()-$('form').height();
-	$('#messages').css('max-height',messageheight); //max height of the messages div should be the ( document height - the height of the input bar ), any larger would be scrolled
-	$('#messages').css('bottom',$('form').height()+6); //sets bottom of the messages (position:fixed) to 6 more than the height of the input bar
-});
+*/
 
 function mobileInputLocation(){
 /*
@@ -55,19 +53,33 @@ function mobileInputLocation(){
 	}
 */
 }
+/*
+function userTyping(userTyping){
+	
+	if(userTyping.isTyping){
+		var firstLetter = userTyping.name.charAt(0);
+	}else{
+	}
+}
 function typing(name){
 	if($('input').val()){
-		/*
-		console.log(name+' is typing');
-		socket.emit('typing check', name);
-		*/
+		isTyping = true;
+	} else {
+		isTyping = false;
 	}
+	var nameTyping = { name:name,isTyping:isTyping };
+	socket.emit('typing',nameTyping);
 };
 function engine(){
 	setInterval(function(){
 		typing(name);
-	},10);
+	},500);
 };
+*/
+
 $(document).ready(function(){
-	engine();
+	var messageheight = $(document).height()-$('form').height();
+	$('#messages').css('max-height',messageheight); //max height of the messages div should be the ( document height - the height of the input bar ), any larger would be scrolled
+	$('#messages').css('bottom',$('form').height()+6); //sets bottom of the messages (position:fixed) to 6 more than the height of the input bar
+	//engine();
 });

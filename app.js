@@ -56,8 +56,9 @@ io.on('connection', function(socket){ //on connection to a socket,
 
 	}); // end what happens when the client answers with the user's name
 
-	socket.on('typing check', function(name){
-		io.emit('typing', name);
+	socket.on('typing', function(userTyping){
+		io.emit('userTyping', userTyping);
+		console.log(userTyping);
 	});
 
 	socket.on('chat message', function(body){ //when the socket says the client sent a message,
@@ -76,7 +77,7 @@ io.on('connection', function(socket){ //on connection to a socket,
 		name = users[UID]; // sets var name to be the name found in the array users by the UID
 		var left = name + " left the chat."; //tells everyone that user left
 		io.emit('chat message', serverMessage(left));
-		numOfUsersOnline--; //still need to remove name from names array
+		numOfUsersOnline--;  // number of people online goes down by one
 		users[UID] = null; //removes userid from array of taken uids
 		makeUserList(); //see :30
 		logger(serverMessage('user ' + UID + ' with name ' + users[UID] + ' is offline;')); // notify server that user is offline
@@ -106,7 +107,6 @@ function serverMessage(msgBody) {
 }
 function logger(message){
 	console.log(message);
-	console.log(message.timestamp + "	" + message.name + "	" + message.body + "\n");
 	fs.appendFile(
 		__dirname + "/public/messages.log", 
 		message.timestamp + "	" + message.name + "	" + message.body + "\n", 
@@ -136,5 +136,5 @@ Date.prototype.toLocalString = function() { // concat time strings to form one w
 };
 
 http.listen(1337, function(){ //listen for requests at ipaddress:1337
-	logger(serverMessage('Server is running on port 1337'));		//callback function, completely optional.
+	logger(serverMessage('Server is running on port 1337'));  //callback function, completely optional.
 });
