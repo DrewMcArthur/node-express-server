@@ -55,11 +55,10 @@ io.on('connection', function(socket){ //on connection to a socket,
 		}
 
 	}); // end what happens when the client answers with the user's name
-
-	socket.on('typing', function(userTyping){
-		io.emit('userTyping', userTyping);
-		console.log(userTyping);
-	});
+	
+	setInterval(function(){
+		socket.emit('ask if typing');
+	},500);
 
 	socket.on('chat message', function(body){ //when the socket says the client sent a message,
 		var name = users[UID]; //get name by UID
