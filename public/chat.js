@@ -23,10 +23,10 @@ socket.on('ask if typing', function(){
 	if($('input').val()){
 		isTyping = true;
 	} else {
-		isTyping = false'
+		isTyping = false;
 	}
 	var userTyping = { name:name,isTyping:isTyping };
-	socket.emit('typing checked' , userTyping);
+	socket.emit('typing checked', userTyping);
 });
 
 socket.on('chat message', function(msg){ //when the server sends a chat message, 

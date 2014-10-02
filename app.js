@@ -56,13 +56,15 @@ io.on('connection', function(socket){ //on connection to a socket,
 
 	}); // end what happens when the client answers with the user's name
 	
+/*
 	setInterval(function(){
-		socket.emit('ask if typing');
-	},500);
+		io.emit('ask if typing');
+	},5000);
+*/
 	
-	socket.on('typing checked',function(userTyping){
+	socket.on('typing checked', function(userTyping){ // when the client responds, 
 		console.log(userTyping);
-	}
+	});
 
 	socket.on('chat message', function(body){ //when the socket says the client sent a message,
 		var name = users[UID]; //get name by UID
