@@ -79,6 +79,8 @@ io.on('connection', function(socket){ //on connection to a socket,
 	socket.on('disconnect', function(){ //when the client disconnects from the server, 
 		name = users[UID]; // sets var name to be the name found in the array users by the UID
 		var left = name + " left the chat."; //tells everyone that user left
+		var userTyping = {name:name,isTyping:false};
+		io.emit('typing message',userTyping);
 		io.emit('chat message', serverMessage(left));
 		numOfUsersOnline--;  // number of people online goes down by one
 		users[UID] = null; //removes userid from array of taken uids
