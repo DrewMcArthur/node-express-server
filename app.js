@@ -49,7 +49,7 @@ io.on('connection', function(socket){ //on connection to a socket,
 	} else { // otherwise, if you're the only one on the server
 		socket.emit('chat message', serverMessage("You are the only user currently online."));
 	}
-	socket.emit('chat message',serverMessage("Your name is currently just your UID.  You can change this by typing \"/name [your new name]\", for Example: \"/name John\""));
+	socket.emit('chat message',serverMessage("Your name is currently just your UID.  You can change this by typing \"/name [your new name]\", for Example: \"/name john\""));
 
 
 	socket.on('answer name', function(name){ // when the client responds, 
