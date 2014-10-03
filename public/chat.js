@@ -40,23 +40,34 @@ socket.on('typing message', function(userTyping){ // whenever a client responds 
 
 $('form').submit(function(){ //when user presses 'send'
 	if($('#m').val()){ //prevents sending of blank messages
-		socket.emit('chat message', $('#m').val()); 
-		//send an event 'chat message' to the server
-		$('#m').val(''); //clear form
-		isTyping = false;
-		var userTyping = { name:name,isTyping:isTyping };
-		socket.emit('typing checked', userTyping);
+		var firstLetter = $('#m').val().charAt(0);
+		if(firstLetter=="/"){
+			clientCommand($('#m').val());
+			$('#m').val(''); //clear form
+			isTyping = false;
+			var userTyping = { name:name,isTyping:isTyping };
+			socket.emit('typing checked', userTyping);
+		}else{
+			socket.emit('chat message', $('#m').val()); 
+			//send an event 'chat message' to the server
+			$('#m').val(''); //clear form
+			isTyping = false;
+			var userTyping = { name:name,isTyping:isTyping };
+			socket.emit('typing checked', userTyping);
+		}
 	}
 	return false;
 }); //end form submit function
 
-socket.on('chat message', function(msg){ //when the server sends a chat message, 
+socket.on('chat message', function(msg){addChatMessage(msg)}); //when the server sends a chat message, add that chat message
+
+function addChatMessage(msg){
 	$('#messages').append('<li class=\"message\">' + msg.name + ":	" + msg.body + "</li>"); //append a message as an li
 	$('#messages').scrollTop($('#messages')[0].scrollHeight); //and scroll to the bottom of the page
 	if($('#messages li.typingMessage').length){ 
 		$('#messages li.message:last-child').insertBefore($('#messages li.typingMessage'));
 	}
-});
+}
 
 /*
 function mobileInputLocation(){
@@ -75,6 +86,25 @@ function mobileInputLocation(){
 	}
 }
 */
+function clientCommand(com){
+	com = com.replace(/\//,"");
+	if( com.indexOf("help") > -1 || com.indexOf("?") > -1 ) {
+		commandHelp(com);
+	}else{
+		switch(com){
+			case "online":
+			case "Online":
+				socket.emit("ask who is online");
+				break;
+			default: //if the com variable doesn't fit any of these things
+				var message = {name:"Error",body:"Sorry, I don't have a help message for \"" + com +"\". Was it a typo? If you didn't mean to type a command, try again without the / in front."};
+				addChatMessage(message);
+		}
+	}
+}
+function commandHelp(com){
+	//insert here what you'll do as a function of the command input by the client
+}
 
 $(document).ready(function(){
 	var messageheight = $(document).height()-$('form').height();

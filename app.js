@@ -75,6 +75,22 @@ io.on('connection', function(socket){ //on connection to a socket,
 		io.emit('chat message', msg); //tell all of the clients that there is a new message, and give it to them
 		logger(msg);
 	});
+	
+	socket.on('ask who is online', function(){
+		var nOnline = numOfUsersOnline + " other users are online."; // number of people online if 3+
+		var n1Online = numOfUsersOnline + " other user is online."; // number of people online if only 2
+		var uOnline = {name:"Online",timestamp:new Date().toLocalString(), body:userList}; // users online
+		if(numOfUsersOnline>1){ //if there's someone else online, then
+			if(numOfUsersOnline==2){
+				socket.emit('chat message',serverMessage(n1Online)); //number of people online if only 1 other person
+			} else {
+				socket.emit('chat message', serverMessage(nOnline)); // tell client that just entered how many are online
+			}
+			socket.emit('chat message', uOnline); // tell client that just entered who is online
+		} else { // otherwise, if you're the only one on the server
+			socket.emit('chat message', serverMessage("You are the only user currently online."));
+		}
+	});
 
 	socket.on('disconnect', function(){ //when the client disconnects from the server, 
 		name = users[UID]; // sets var name to be the name found in the array users by the UID
