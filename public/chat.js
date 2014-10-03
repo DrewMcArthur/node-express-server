@@ -10,6 +10,33 @@ if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
 	isMobile = false;
 } 
 
+socket.on('ask name', function(){ //when the server asks for your name, 
+	name = prompt("Please enter your name",""); // prompt for the name
+	socket.emit('answer name', name); // and answer the server
+	$('form').focus();
+});	
+
+socket.on('ask if typing', function(){
+	if($('input').val()){
+		isTyping = true;
+	} else {
+		isTyping = false;
+	}
+	var userTyping = { name:name,isTyping:isTyping };
+	socket.emit('typing checked', userTyping);
+});
+
+socket.on('typing message', function(userTyping){
+	userTyping.nameID = userTyping.name.replace(/\W/g,"");
+	if(userTyping.isTyping && !$('#'+userTyping.nameID).length && userTyping.name!=name){
+		$('#messages').append("<li class=\"typingMessage\" id=\""+userTyping.nameID+"\">"+userTyping.nameID+" is Typing</li>");
+	} else {
+		if(!userTyping.isTyping){
+			$('#'+userTyping.nameID).remove();
+		}
+	}
+});
+
 $('form').submit(function(){ //when user presses 'send'
 	if($('#m').val()){ //prevents sending of blank messages
 		socket.emit('chat message', $('#m').val()); 
@@ -22,37 +49,22 @@ $('form').submit(function(){ //when user presses 'send'
 	return false;
 }); //end form submit function
 
-socket.on('ask if typing', function(){
-	if($('input').val()){
-		isTyping = true;
-	} else {
-		isTyping = false;
-	}
-	var userTyping = { name:name,isTyping:isTyping };
-	socket.emit('typing checked', userTyping);
-});
-socket.on('typing message', function(userTyping){
-	userTyping.nameID = userTyping.name.replace(/\W/g,"");
-	if(userTyping.isTyping && !$('#'+userTyping.nameID).length){
-		$('#messages').append("<li id=\""+userTyping.nameID+"\">"+userTyping.nameID+" is Typing</li>");
-	} else {
-		if(!userTyping.isTyping){
-			$('#'+userTyping.nameID).remove();
-		}
-	}
-});
-
 socket.on('chat message', function(msg){ //when the server sends a chat message, 
-	$('#messages').append($('<li>').text(msg.name + ":	" + msg.body)); //append a message as an li
+/*
+	if($('#messages li.typingMessage').length){
+		var liToInsert = "<li>" + msg.name + ":	" + msg.body + "</li>";
+		$(liToInsert).insertBefore($'#messages li.typingMessage');
+//		$('#messages li.typingMessage').prepend($('<li>').text(msg.name + ":	" + msg.body)); //append a message as an li
+	}else{
+		$('#messages').append($('<li>').text(msg.name + ":	" + msg.body)); //append a message as an li
+	}
+*/
+	$('#messages').append('<li class=\"message\">' + msg.name + ":	" + msg.body + "</li>"); //append a message as an li
 	$('#messages').scrollTop($('#messages')[0].scrollHeight); //and scroll to the bottom of the page
+	if($('#messages li.typingMessage').length){ 
+		$('#messages li.message:last-child').insertBefore($('#messages li.typingMessage'));
+	}
 });
-
-socket.on('ask name', function(){ //when the server asks for your name, 
-	name = prompt("Please enter your name",""); // prompt for the name
-	socket.emit('answer name', name); // and answer the server
-	$('form').focus();
-});	
-
 
 /*
 function mobileInputLocation(){
