@@ -2,6 +2,7 @@ var socket = io();
 var name;
 var isMobile;
 var isTyping;
+var nameChanged;
 
 if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) { 
 	//tests if device is a hand held and creates boolean isMobile  (true if mobile, else false)
@@ -9,9 +10,6 @@ if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
 }else{
 	isMobile = false;
 } 
-
-socket.on('ask name', function(){ //when the server asks for your name, 
-});	
 
 socket.on('ask if typing', function(){ //when the server asks if the user is typing
 	if($('#m').val()){  //the client checks the value of the input, and if there's anything there, i.e user is typing
@@ -88,8 +86,14 @@ function clientCommand(com){
 	if( com.indexOf("help") > -1 || com.indexOf("?") > -1 ) {
 		commandHelp(com);
 	}else if(com.indexOf("name") > -1){
-		var name = com.replace(/name\s*/,"");
-		socket.emit('answer name', name); // and answer the server
+		if(!nameChanged){
+			var name = com.replace(/name\s*/,"");
+			socket.emit('answer name', name); // and answer the server
+			nameChanged = true;
+		} else {
+			var message = {name:"Error",body:"You've already changed your name and we only allow you to do that once, sorry."};
+			addChatMessage(message);
+		}
 	}else if(com.indexOf("online") > -1){
 		socket.emit("ask who is online");
 	}else{
