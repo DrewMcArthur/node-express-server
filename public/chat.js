@@ -15,6 +15,9 @@ $('form').submit(function(){ //when user presses 'send'
 		socket.emit('chat message', $('#m').val()); 
 		//send an event 'chat message' to the server
 		$('#m').val(''); //clear form
+		isTyping = false;
+		var userTyping = { name:name,isTyping:isTyping };
+		socket.emit('typing checked', userTyping);
 	}
 	return false;
 }); //end form submit function
@@ -27,6 +30,16 @@ socket.on('ask if typing', function(){
 	}
 	var userTyping = { name:name,isTyping:isTyping };
 	socket.emit('typing checked', userTyping);
+});
+socket.on('typing message', function(userTyping){
+	userTyping.nameID = userTyping.name.replace(/\W/g,"");
+	if(userTyping.isTyping && !$('#'+userTyping.nameID).length){
+		$('#messages').append("<li id=\""+userTyping.nameID+"\">"+userTyping.nameID+" is Typing</li>");
+	} else {
+		if(!userTyping.isTyping){
+			$('#'+userTyping.nameID).remove();
+		}
+	}
 });
 
 socket.on('chat message', function(msg){ //when the server sends a chat message, 

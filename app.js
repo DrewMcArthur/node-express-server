@@ -56,14 +56,12 @@ io.on('connection', function(socket){ //on connection to a socket,
 
 	}); // end what happens when the client answers with the user's name
 	
-/*
 	setInterval(function(){
 		io.emit('ask if typing');
-	},5000);
-*/
+	},500);
 	
 	socket.on('typing checked', function(userTyping){ // when the client responds, 
-		console.log(userTyping);
+		io.emit('typing message',userTyping);
 	});
 
 	socket.on('chat message', function(body){ //when the socket says the client sent a message,
