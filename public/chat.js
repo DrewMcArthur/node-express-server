@@ -11,9 +11,6 @@ if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
 } 
 
 socket.on('ask name', function(){ //when the server asks for your name, 
-	name = prompt("Please enter your name",""); // prompt for the name
-	socket.emit('answer name', name); // and answer the server
-	$('form').focus(); //focus on the input box so user doesn't have to click/tab before typing right away //doesn't work yet
 });	
 
 socket.on('ask if typing', function(){ //when the server asks if the user is typing
@@ -87,19 +84,17 @@ function mobileInputLocation(){
 }
 */
 function clientCommand(com){
-	com = com.replace(/\//,"");
+	com = com.replace(/\//,"").toLowerCase();
 	if( com.indexOf("help") > -1 || com.indexOf("?") > -1 ) {
 		commandHelp(com);
+	}else if(com.indexOf("name") > -1){
+		var name = com.replace(/name\s*/,"");
+		socket.emit('answer name', name); // and answer the server
+	}else if(com.indexOf("online") > -1){
+		socket.emit("ask who is online");
 	}else{
-		switch(com){
-			case "online":
-			case "Online":
-				socket.emit("ask who is online");
-				break;
-			default: //if the com variable doesn't fit any of these things
-				var message = {name:"Error",body:"Sorry, I don't have a help message for \"" + com +"\". Was it a typo? If you didn't mean to type a command, try again without the / in front."};
-				addChatMessage(message);
-		}
+		var message = {name:"Error",body:"Sorry, I don't have a help message for \"" + com +"\". Was it a typo? If you didn't mean to type a command, try again without the / in front."};
+		addChatMessage(message);
 	}
 }
 function commandHelp(com){

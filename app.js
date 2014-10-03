@@ -22,46 +22,55 @@ io.on('connection', function(socket){ //on connection to a socket,
 	}
 	
 	var UID = random;
+	name = "user"+UID;
 
-	socket.emit('ask name'); //ask the server what the user's name is 
+	var entered = name + " entered the chat!"; //a person just entered the chat
+	users[UID] = name; //all names of people online
+	logger(serverMessage('user ' + UID + ' with name ' + users[UID] + ' is online;')); // notify server that user is online
+
+	var nOnline = numOfUsersOnline + " other users are online."; // number of people online if 3+
+	var n1Online = numOfUsersOnline + " other user is online."; // number of people online if only 2
+	var uOnline = "Online: " + userList; // users online
+
+	numOfUsersOnline++; // increase number online by 1
+
+	makeUserList(); //iterate through users, and make an array without all of the holes
+	logger(serverMessage(JSON.stringify(userList))); // log users online
+
+	//says [user entered] to everyone, tells newb how many and who is online.
+	if(numOfUsersOnline>1){ //if there's someone else online, then
+		if(numOfUsersOnline==2){
+			socket.emit('chat message',serverMessage(n1Online)); //number of people online if only 1 other person
+		} else {
+			socket.emit('chat message', serverMessage(nOnline)); // tell client that just entered how many are online
+		}
+		socket.emit('chat message', serverMessage(uOnline)); // tell client that just entered who is online
+		io.emit('chat message', serverMessage(entered));//this should be changed so that it only broadcasts to all of the other sockets, and not itself.
+	} else { // otherwise, if you're the only one on the server
+		socket.emit('chat message', serverMessage("You are the only user currently online."));
+	}
+	socket.emit('chat message',serverMessage("Your name is currently just your UID.  You can change this by typing \"/name [your new name]\", for Example: \"/name John\""));
+
 
 	socket.on('answer name', function(name){ // when the client responds, 
 
-		var entered = name + " entered the chat!"; //a person just entered the chat
+		var nameChange = "user"+UID+" changed their name to \""+name+"\"."; //a person just entered the chat
 		users[UID] = name; //all names of people online
-		logger(serverMessage('user ' + UID + ' with name ' + users[UID] + ' is online;')); // notify server that user is online
-
-		var nOnline = numOfUsersOnline + " other users are online."; // number of people online if 3+
-		var n1Online = numOfUsersOnline + " other user is online."; // number of people online if only 2
-		var uOnline = "Online: " + userList; // users online
-
-		numOfUsersOnline++; // increase number online by 1
+		logger(serverMessage(nameChange)); // notify server that user is online
 
 		makeUserList(); //iterate through users, and make an array without all of the holes
 		logger(serverMessage(JSON.stringify(userList))); // log users online
 
-		//says [user entered] to everyone, tells newb how many and who is online.
-		if(numOfUsersOnline>1){ //if there's someone else online, then
-			if(numOfUsersOnline==2){
-				socket.emit('chat message',serverMessage(n1Online)); //number of people online if only 1 other person
-			} else {
-				socket.emit('chat message', serverMessage(nOnline)); // tell client that just entered how many are online
-			}
-			socket.emit('chat message', serverMessage(uOnline)); // tell client that just entered who is online
-			logger(serverMessage(uOnline));
-			io.emit('chat message', serverMessage(entered));//this should be changed so that it only broadcasts to all of the other sockets, and not itself.
-		} else { // otherwise, if you're the only one on the server
-			socket.emit('chat message', serverMessage("You are the only user currently online."));
-		}
+		io.emit('chat message', serverMessage(nameChange));
 
 	}); // end what happens when the client answers with the user's name
 	
 	setInterval(function(){
-		io.emit('ask if typing');
-	},500);
+		io.emit('ask if typing'); // every X milliseconds, send out a request to the clients asking if the user is typing
+	},500); //the number here is Xms
 	
 	socket.on('typing checked', function(userTyping){ // when the client responds, 
-		io.emit('typing message',userTyping);
+		io.emit('typing message',userTyping); //tell everyone the results of the previous request
 	});
 
 	socket.on('chat message', function(body){ //when the socket says the client sent a message,
