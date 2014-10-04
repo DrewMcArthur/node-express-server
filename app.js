@@ -3,6 +3,8 @@ var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var fs = require('fs');
+var stream = require('stream');
+var liner = new stream.Transform( { objectMode: true } )
 
 var users = new Array(); // array of users online by UID
 var numOfUsersOnline = 0; // incremented and decremented on connect and disconnect
@@ -12,6 +14,8 @@ var uidCeil = 10000; // UID will be random number between 1 and uidCeil
 app.use(express.static(__dirname + '/public')); // allow access to all files in ./public
 
 io.on('connection', function(socket){ //on connection to a socket,
+
+//	console.log(socket); //logs all connection information wow
 	
 	var address = socket.handshake.address;
 	logger(serverMessage(address));
@@ -69,6 +73,22 @@ io.on('connection', function(socket){ //on connection to a socket,
 
 	}); // end what happens when the client answers with the user's name
 	
+/*
+	socket.on('set ip name', function(nameSet){
+		fs.appendFile(
+			__dirname + "/ip.db", 
+			address+":"+nameSet+",\n",
+			function(err){ 
+				if(err) { console.log(err); } 
+			}
+		);
+		fs.readFile(__dirname + '/ip.db', function (err, data) { 
+			if(err) throw err;
+			console.log("file is "+data.toString('utf8'));
+		});
+	});
+*/
+	
 	setInterval(function(){
 		io.emit('ask if typing'); // every X milliseconds, send out a request to the clients asking if the user is typing
 	},500); //the number here is Xms
@@ -84,7 +104,7 @@ io.on('connection', function(socket){ //on connection to a socket,
 		var timestamp = (new Date()).toLocalString(); // call new time string format
 		var msg = { // messages are now sent as an object, with this format.  MSGOJB
 			name:name,
-			ip:addres,
+			ip:address,
 			timestamp:timestamp,
 			body:body
 		};

@@ -26,7 +26,6 @@ socket.on('ask if typing', function(){ //when the server asks if the user is typ
 
 socket.on('typing message', function(userTyping){ // whenever a client responds to the server, then the server sends a reply to all clients.  
 	userTyping.nameID = userTyping.name.replace(/\s/g,"");  // this is to prevent bad id's on the elements by username
-//	console.log(userTyping);
 	if(userTyping.isTyping && !$('#'+userTyping.nameID).length && userTyping.name!=name){  
 	// if a user is typing, and the typing element for that user does not yet exist, and the user that is typing is NOT the user of this client, then
 		$('#messages').append("<li class=\"typingMessage\" id=\""+userTyping.nameID+"\">"+userTyping.nameID+" is Typing</li>"); //append a message that says they're typing.
@@ -86,21 +85,22 @@ function mobileInputLocation(){
 }
 */
 function clientCommand(com){
-	console.log("command entered");
 	com = com.replace(/\//,"").toLowerCase();
 	if( com.indexOf("help") > -1 || com.indexOf("?") > -1 ) {
 		commandHelp(com);
 	}else if(com.indexOf("name") > -1){
-		if(!nameChanged){
+		//if(com.indexOf("set") > -1){
+		//	nameSet = com.replace(/name\s*set\s*/,"");
+	//		socket.emit('set ip name', nameSet);
+	/*	} else*/ if(com.replace(/\s+/g,"")=="name"){	
+			addChatMessage(serverMessage("Your name is "+name));
+		} else if(!nameChanged){
 			nameID = name.replace(/\s/g,"");  // this is to prevent bad id's on the elements by username
 			$('#'+nameID).remove(); // find the typing message for that user, and remove it, since that user no longer exists. // should probably add .typingMessage on to selector.
 			name = com.replace(/name\s*/,"");
 			if(name!=""){
 				socket.emit('answer name', name); // and answer the server
 				nameChanged = true;
-			}else{
-				addChatMessage(serverMessage("Your name is "+name));
-				console.log('name is blank');
 			}
 		} else {
 			var message = {name:"Error",body:"You've already changed your name and we only allow you to do that once, sorry."};
