@@ -13,6 +13,9 @@ app.use(express.static(__dirname + '/public')); // allow access to all files in 
 
 io.on('connection', function(socket){ //on connection to a socket,
 	
+	var address = socket.handshake.address;
+	logger(serverMessage(address));
+	
 	var random = Math.ceil(Math.random() * uidCeil); //set a UID to a random number
 
 	while(users[random] != null){ // try doing this, and if the UID is taken, keep repeating it
@@ -23,6 +26,7 @@ io.on('connection', function(socket){ //on connection to a socket,
 	
 	var UID = random;
 	name = "user"+UID;
+	socket.emit('name is', name);
 
 	var entered = name + " entered the chat!"; //a person just entered the chat
 	users[UID] = name; //all names of people online
@@ -70,7 +74,9 @@ io.on('connection', function(socket){ //on connection to a socket,
 	},500); //the number here is Xms
 	
 	socket.on('typing checked', function(userTyping){ // when the client responds, 
-		io.emit('typing message',userTyping); //tell everyone the results of the previous request
+		if(!(userTyping.name.indexOf("user") > -1)){
+			io.emit('typing message',userTyping); //tell everyone the results of the previous request
+		}
 	});
 
 	socket.on('chat message', function(body){ //when the socket says the client sent a message,
@@ -78,6 +84,7 @@ io.on('connection', function(socket){ //on connection to a socket,
 		var timestamp = (new Date()).toLocalString(); // call new time string format
 		var msg = { // messages are now sent as an object, with this format.  MSGOJB
 			name:name,
+			ip:addres,
 			timestamp:timestamp,
 			body:body
 		};

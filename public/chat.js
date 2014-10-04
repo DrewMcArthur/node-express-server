@@ -10,6 +10,9 @@ if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
 }else{
 	isMobile = false;
 } 
+socket.on('name is', function(nameReceived){
+	name = nameReceived;
+});
 
 socket.on('ask if typing', function(){ //when the server asks if the user is typing
 	if($('#m').val()){  //the client checks the value of the input, and if there's anything there, i.e user is typing
@@ -22,7 +25,8 @@ socket.on('ask if typing', function(){ //when the server asks if the user is typ
 });
 
 socket.on('typing message', function(userTyping){ // whenever a client responds to the server, then the server sends a reply to all clients.  
-	userTyping.nameID = userTyping.name.replace(/\W/g,"");  // this is to prevent bad id's on the elements by username
+	userTyping.nameID = userTyping.name.replace(/\s/g,"");  // this is to prevent bad id's on the elements by username
+//	console.log(userTyping);
 	if(userTyping.isTyping && !$('#'+userTyping.nameID).length && userTyping.name!=name){  
 	// if a user is typing, and the typing element for that user does not yet exist, and the user that is typing is NOT the user of this client, then
 		$('#messages').append("<li class=\"typingMessage\" id=\""+userTyping.nameID+"\">"+userTyping.nameID+" is Typing</li>"); //append a message that says they're typing.
@@ -87,9 +91,13 @@ function clientCommand(com){
 		commandHelp(com);
 	}else if(com.indexOf("name") > -1){
 		if(!nameChanged){
-			var name = com.replace(/name\s*/,"");
-			socket.emit('answer name', name); // and answer the server
-			nameChanged = true;
+			nameID = name.replace(/\s/g,"");  // this is to prevent bad id's on the elements by username
+			$('#'+nameID).remove(); // find the typing message for that user, and remove it, since that user no longer exists.
+			name = com.replace(/name\s*/,"");
+			if(name!=""){
+				socket.emit('answer name', name); // and answer the server
+				nameChanged = true;
+			}else{addChatMessage(serverMessage("Error: You need to put in a name."))}
 		} else {
 			var message = {name:"Error",body:"You've already changed your name and we only allow you to do that once, sorry."};
 			addChatMessage(message);
@@ -101,8 +109,19 @@ function clientCommand(com){
 		addChatMessage(message);
 	}
 }
+
+function serverMessage(msgBody) { 
+        msgFromServer = {
+                name:"Server",
+                timestamp:(new Date()).toLocalString(),
+                body:msgBody
+        }
+        return msgFromServer;
+}
+
 function commandHelp(com){
 	//insert here what you'll do as a function of the command input by the client
+	addChatMessage(serverMessage("/Online returns the names of users currently online.\n/name changes your name.  This can only be done once per connection.\n"));
 }
 
 $(document).ready(function(){
