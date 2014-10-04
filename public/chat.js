@@ -31,9 +31,10 @@ socket.on('typing message', function(userTyping){ // whenever a client responds 
 		if(!$('#messages ul.typingMessage').length){
 			$('#messages').append("<ul class=\"typingMessage\" id=\""+userTyping.nameID+"P\"></ul>"); //append a message that says they're typing.
 		}
-			$('#messages li.typingMessage').append("<li id=\""+userTyping.nameID+"\">"+userTyping.nameID+" is Typing</li>"); //append a message that says they're typing.
+			$('#messages ul.typingMessage').append("<li id=\""+userTyping.nameID+"\">"+userTyping.nameID+" is Typing</li>"); //append a message that says they're typing.
 	} else {
 		if(!userTyping.isTyping && ($('#'+userTyping.nameID).length || $('#'+userTyping.nameID+'P').length )){ //if the specific user is not typing, and the typing message exists
+		console.log("this works");
 			$('#'+userTyping.nameID).remove(); // find the typing message for that user, and remove it. 
 			$('#'+userTyping.nameID+'P').remove(); // find the typing message for that user, and remove it. 
 		}
@@ -66,8 +67,8 @@ socket.on('chat message', function(msg){addChatMessage(msg)}); //when the server
 function addChatMessage(msg){
 	$('#messages').append('<li class=\"message\">' + msg.name + ":	" + msg.body + "</li>"); //append a message as an li
 	$('#messages').scrollTop($('#messages')[0].scrollHeight); //and scroll to the bottom of the page
-	if($('#messages li.typingMessage').length){ 
-		$('#messages li.message:last-child').insertBefore($('#messages li.typingMessage'));
+	if($('#messages ul.typingMessage').length){ 
+		$('#messages li.message:last-child').insertBefore($('#messages ul.typingMessage'));
 	}
 }
 
