@@ -28,10 +28,14 @@ socket.on('typing message', function(userTyping){ // whenever a client responds 
 	userTyping.nameID = userTyping.name.replace(/\s/g,"");  // this is to prevent bad id's on the elements by username
 	if(userTyping.isTyping && !$('#'+userTyping.nameID).length && userTyping.name!=name){  
 	// if a user is typing, and the typing element for that user does not yet exist, and the user that is typing is NOT the user of this client, then
-		$('#messages').append("<li class=\"typingMessage\" id=\""+userTyping.nameID+"\">"+userTyping.nameID+" is Typing</li>"); //append a message that says they're typing.
+		if(!$('#messages ul.typingMessage').length){
+			$('#messages').append("<ul class=\"typingMessage\" id=\""+userTyping.nameID+"P\"></ul>"); //append a message that says they're typing.
+		}
+			$('#messages li.typingMessage').append("<li id=\""+userTyping.nameID+"\">"+userTyping.nameID+" is Typing</li>"); //append a message that says they're typing.
 	} else {
-		if(!userTyping.isTyping && $('#'+userTyping.nameID).length){ //if the specific user is not typing, and the typing message exists
+		if(!userTyping.isTyping && ($('#'+userTyping.nameID).length || $('#'+userTyping.nameID+'P').length )){ //if the specific user is not typing, and the typing message exists
 			$('#'+userTyping.nameID).remove(); // find the typing message for that user, and remove it. 
+			$('#'+userTyping.nameID+'P').remove(); // find the typing message for that user, and remove it. 
 		}
 	}
 });
