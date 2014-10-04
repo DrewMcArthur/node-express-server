@@ -86,18 +86,22 @@ function mobileInputLocation(){
 }
 */
 function clientCommand(com){
+	console.log("command entered");
 	com = com.replace(/\//,"").toLowerCase();
 	if( com.indexOf("help") > -1 || com.indexOf("?") > -1 ) {
 		commandHelp(com);
 	}else if(com.indexOf("name") > -1){
 		if(!nameChanged){
 			nameID = name.replace(/\s/g,"");  // this is to prevent bad id's on the elements by username
-			$('#'+nameID).remove(); // find the typing message for that user, and remove it, since that user no longer exists.
+			$('#'+nameID).remove(); // find the typing message for that user, and remove it, since that user no longer exists. // should probably add .typingMessage on to selector.
 			name = com.replace(/name\s*/,"");
 			if(name!=""){
 				socket.emit('answer name', name); // and answer the server
 				nameChanged = true;
-			}else{addChatMessage(serverMessage("Error: You need to put in a name."))}
+			}else{
+				addChatMessage(serverMessage("Your name is "+name));
+				console.log('name is blank');
+			}
 		} else {
 			var message = {name:"Error",body:"You've already changed your name and we only allow you to do that once, sorry."};
 			addChatMessage(message);
@@ -123,6 +127,25 @@ function commandHelp(com){
 	//insert here what you'll do as a function of the command input by the client
 	addChatMessage(serverMessage("/Online returns the names of users currently online.\n/name changes your name.  This can only be done once per connection.\n"));
 }
+
+Date.prototype.toLocalString = function() { // concat time strings to form one with format YYMMDDhhmmss
+	function pad(number) { // used for time, to make sure the date isn't returned as 1491 instead of 140901
+	  if ( number < 10 ) { 
+	    return '0' + number;
+	  }
+	  return number;
+	}
+
+	return (
+		"" + 
+		pad( this.getYear() - 100 ) +
+		pad( this.getMonth() + 1 ) +
+		pad( this.getDate() ) +
+		pad( this.getHours() ) +
+		pad( this.getMinutes() ) +
+		pad( this.getSeconds() )
+	);
+};
 
 $(document).ready(function(){
 	var messageheight = $(document).height()-$('form').height();
