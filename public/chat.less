@@ -4,7 +4,7 @@
 	box-sizing: border-box; 
 }
 body { 
-	font: 13px Helvetica, Arial; 
+	font: 13px 'Lato', Helvetica, Arial; 
 	overflow:hidden;
 	margin:auto;
 	width:800px;
@@ -69,21 +69,28 @@ form {
 and (min-device-width : 320px) 
 and (max-device-width : 480px) {
 	* {
-		font-size:56px;
+		font-size:16px;
+		/* this should be it, but it doesn't work well 
+		font-size:1.1em;
+		*/
 	}
 	body {
 		width:100%;
 	}
 	#messages {
 		ul.typingMessage {
-			width:auto;
+			width:100%;
 			margin:auto;
 			text-align:center;
 			li{ 
 				width:auto;
 				margin:auto;
+				margin-right:20%;
 				text-align:center;
 				display:block;
+			}
+			li.self{
+				margin-left:20%;
 			}
 		}
 	}
