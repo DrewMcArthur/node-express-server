@@ -113,7 +113,7 @@ io.on('connection', function(socket){ //on connection to a socket,
 	});
 	
 	socket.on('ask who is online', function(){
-		var nOnline = numOfUsersOnline + "users are online."; // number of people online
+		var nOnline = numOfUsersOnline + " users are online."; // number of people online
 		var uOnline = {name:"Online",timestamp:new Date().toLocalString(), body:userList}; // users online
 		if(numOfUsersOnline>1){ //if there's someone else online, then
 			socket.emit('chat message', serverMessage(nOnline)); // tell client that just entered how many are online
