@@ -65,11 +65,12 @@ $('form').submit(function(){ //when user presses 'send'
 socket.on('chat message', function(msg){addChatMessage(msg)}); //when the server sends a chat message, add that chat message
 
 function addChatMessage(msg){
-	$('#messages').append('<li class=\"message\">' + msg.name + ":	" + msg.body + "</li>"); //append a message as an li
+	$('#messages').append('<li class=\"message\">' + msg.name + ":	" + msg.body + "<br/></li>"); //append a message as an li
 	$('#messages').scrollTop($('#messages')[0].scrollHeight); //and scroll to the bottom of the page
 	if($('#messages ul.typingMessage').length){ 
 		$('#messages li.message:last-child').insertBefore($('#messages ul.typingMessage'));
 	}
+	if(msg.name == name){$('#messages li.message:last-child').addClass('self')};
 }
 
 /*

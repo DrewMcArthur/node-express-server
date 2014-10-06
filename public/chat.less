@@ -6,13 +6,16 @@
 body { 
 	font: 13px Helvetica, Arial; 
 	overflow:hidden;
+	margin:auto;
+	width:800px;
+	position:relative;
 }
 form { 
-	background: #000; 
+	background: #eee; 
 	padding: 3px; 
 	position: fixed; 
 	bottom: 0; 
-	width: 100%; 
+	width: 800px; 
 	input { 
 		border: 0; 
 		padding: 10px; 
@@ -21,7 +24,7 @@ form {
 	}
 	button { 
 		width: 9%; 
-		background: rgb(130, 224, 255); 
+		background: #B23232;
 		border: none; 
 		padding: 10px; 
 	}
@@ -33,16 +36,32 @@ form {
 	overflow:scroll;
 	position:fixed;
 	height:auto;
-	width:100%;
+	width:800px;
 	li { 
 		padding: 5px 10px; 
+		background-color:#eee;
+		border-radius:18px;
+		border:1px solid black;
+		width:auto;
+		max-width:400px;
+		overflow-wrap: break-word;	
+		float:left;
+		margin-right:400px;
+	}
+	li.self {
+		float:right;
+		margin-left:400px;
+		margin-right:0px;
+		background-color: #cb5858;
 	}
 	ul.typingMessage {
 		width:100%;
 		li{ float:left; }
 	}
 	li:nth-child(odd) { 
+	/*
 		background: #eee; 
+*/
 	}
 }
 /* Smartphones (portrait and landscape) ----------- */
