@@ -26,7 +26,7 @@ form {
 		width: 9%; 
 		background: #B23232;
 		border: none; 
-		padding: 10px; 
+		padding: 10px 1%; 
 	}
 }
 #messages { 
@@ -43,15 +43,14 @@ form {
 		border-radius:18px;
 		border:1px solid black;
 		width:auto;
-		max-width:400px;
+		max-width:60%;
 		overflow-wrap: break-word;	
 		float:left;
-		margin-right:400px;
+		display:block;
+		clear:both;
 	}
 	li.self {
 		float:right;
-		margin-left:400px;
-		margin-right:0px;
 		background-color: #cb5858;
 	}
 	ul.typingMessage {
@@ -62,6 +61,18 @@ form {
 	/*
 		background: #eee; 
 */
+	}
+}
+@media only screen 
+and (max-width : 800px) {
+	body {
+		width:100%;
+	}
+	form {
+		width:100%;
+	}
+	#messages{
+		width:100%;
 	}
 }
 /* Smartphones (portrait and landscape) ----------- */
@@ -75,22 +86,30 @@ and (max-device-width : 480px) {
 		width:100%;
 	}
 	#messages {
+		width:100%;
 		ul.typingMessage {
 			width:auto;
-			margin:auto;
 			text-align:center;
 			li{ 
 				width:auto;
+				max-width:90%;
 				margin:auto;
 				text-align:center;
 				display:block;
 			}
 		}
+		li{ 
+			width:auto;
+			max-width:90%;
+			margin:.4%;
+		}
 	}
 	form {
 		* {
 			height:100%;
+			width:100%;
 		}
+		width:100%;
 		height:10%;
 		input {
 			width:79%;
@@ -100,3 +119,4 @@ and (max-device-width : 480px) {
 		}
 	}
 }
+
