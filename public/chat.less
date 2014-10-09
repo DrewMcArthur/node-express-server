@@ -64,7 +64,8 @@ form {
 	}
 }
 @media only screen 
-and (max-width : 800px) {
+and (max-width : 800px)
+and (min-device-width : 481px) {
 	body {
 		width:100%;
 	}
@@ -80,9 +81,9 @@ and (max-width : 800px) {
 and (min-device-width : 320px) 
 and (max-device-width : 480px) {
 	* {
-		font-size:16px;
+		font-size:1.6em;
 		/* this should be it, but it doesn't work well 
-		font-size:1.1em;
+		font-size:16px;
 		*/
 	}
 	body {
@@ -117,7 +118,9 @@ and (max-device-width : 480px) {
 			width:100%;
 		}
 		width:100%;
-		height:10%;
+		bottom:0;
+		height:auto;
+		min-height:5%;
 		input {
 			width:79%;
 		}
