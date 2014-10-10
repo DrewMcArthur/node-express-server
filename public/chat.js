@@ -1,8 +1,10 @@
 var socket = io();
-var name;
-var isMobile;
-var isTyping;
-var nameChanged;
+var name; //defines user's name
+var isMobile; //boolean if device is mobile
+var isTyping; //boolean if user is typing;
+var nameChanged; //boolean if user has changed their name
+var mutedList = ""; //list of names user has muted
+var numOfMessages = 0;
 
 if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) { 
 	//tests if device is a hand held and creates boolean isMobile  (true if mobile, else false)
@@ -35,7 +37,6 @@ socket.on('typing message', function(userTyping){ // whenever a client responds 
 	$('#messages').scrollTop($('#messages')[0].scrollHeight); //and scroll to the bottom of the page
 	} else {
 		if(!userTyping.isTyping && ($('#'+userTyping.nameID).length || $('#'+userTyping.nameID+'P').length )){ //if the specific user is not typing, and the typing message exists
-		console.log("this works");
 			$('#'+userTyping.nameID).remove(); // find the typing message for that user, and remove it. 
 			$('#'+userTyping.nameID+'P').remove(); // find the typing message for that user, and remove it. 
 		}
@@ -66,9 +67,11 @@ $('form').submit(function(){ //when user presses 'send'
 socket.on('chat message', function(msg){addChatMessage(msg)}); //when the server sends a chat message, add that chat message
 
 function addChatMessage(msg){
-	$('#messages').append('<li class=\"message\">' + msg.name + ":	" + msg.body + "<br/></li>"); //append a message as an li
+	numOfMessages++;
+	$('#messages').append('<li id=\"'+numOfMessages+'\" class=\"message '+ msg.name + '\">' + msg.name + ":	" + msg.body + "<br/></li>"); //append a message as an li
 	$('#messages').scrollTop($('#messages')[0].scrollHeight); //and scroll to the bottom of the page
-	if(msg.name == name){$('#messages li.message:last-child').addClass('self')};
+	$('.'+name).addClass('self');//finds messages with the class of the current user, and adds a class to show that the user posted that message.
+	if(mutedList.indexOf(msg.name) > -1){$('#'+numOfMessages).addClass("hidden");}
 	if($('#messages ul.typingMessage').length){ 
 		$('#messages li.message:last-child').insertBefore($('#messages ul.typingMessage'));
 	}
@@ -95,7 +98,7 @@ function clientCommand(com){
 	com = com.replace(/\//,"").toLowerCase();
 	if( com.indexOf("help") > -1 || com.indexOf("?") > -1 ) {
 		commandHelp(com);
-	}else if(com.indexOf("name") > -1){
+	}else if(com.indexOf("name") > -1 && com.indexOf("name") < 2){
 		//if(com.indexOf("set") > -1){
 		//	nameSet = com.replace(/name\s*set\s*/,"");
 	//		socket.emit('set ip name', nameSet);
@@ -115,6 +118,13 @@ function clientCommand(com){
 		}
 	}else if(com.indexOf("online") > -1){
 		socket.emit("ask who is online");
+	}else if(com.indexOf("mute") > -1){
+		if(com.replace(/\s+/g,"")=="mute"){	
+			addChatMessage(serverMessage("Who would you like to mute? Type it like this: \n/mute username"));
+		} else {
+			var muted = com.replace(/mute\s+/g,"");
+			if(!(mutedList.indexOf(muted) > -1)){ mutedList += muted + ", "; } //assuming the name isn't already on the list, add the name you're muting onto the list
+		}
 	}else{
 		var message = {name:"Error",body:"Sorry, I don't have a help message for \"" + com +"\". Was it a typo? If you didn't mean to type a command, try again without the / in front."};
 		addChatMessage(message);
