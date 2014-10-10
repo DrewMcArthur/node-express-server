@@ -86,6 +86,10 @@ socket.on('pm sent',function(pmData){
 			body: "To "+pmData.to +": "+pmData.body,
 			isPM: "true"
 		}
+		if(pmData.toUID == -1){
+			pmsg.body = "Error, the user you specified wasn't online.";
+			pmsg.name = "Server";
+		}
 		addChatMessage(pmsg);
 	}
 });
