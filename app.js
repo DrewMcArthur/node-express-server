@@ -196,6 +196,6 @@ Date.prototype.toLocalString = function() { // concat time strings to form one w
 	);
 };
 
-http.listen(1337, function(){ //listen for requests at ipaddress:1337
-	logger(serverMessage('Server is running on port 1337'));  //callback function, completely optional.
+http.listen(80, function(){ //listen for requests at ipaddress:80
+	logger(serverMessage('Server is running on port 80'));  //callback function, completely optional.
 });
