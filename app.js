@@ -6,9 +6,9 @@ var fs = require('fs');
 var stream = require('stream');
 var liner = new stream.Transform( { objectMode: true } )
 
-var users = new Array(); // array of users online by UID
+var users = []; // array of users online by UID
 var numOfUsersOnline = 0; // incremented and decremented on connect and disconnect
-var userList = new Array();  // array of users online in order (no holes in index)
+var userList = [];  // array of users online in order (no holes in index)
 var uidCeil = 10000; // UID will be random number between 1 and uidCeil
 
 app.use(express.static(__dirname + '/public')); // allow access to all files in ./public
@@ -31,6 +31,7 @@ io.on('connection', function(socket){ //on connection to a socket,
 	var UID = random;
 	name = "user"+UID;
 	socket.emit('name is', name);
+	socket.emit('UID is', UID);
 
 	var entered = name + " entered the chat!"; //a person just entered the chat
 	users[UID] = name; //all names of people online
@@ -121,6 +122,14 @@ io.on('connection', function(socket){ //on connection to a socket,
 		} else { // otherwise, if you're the only one on the server
 			socket.emit('chat message', serverMessage("You are the only user currently online."));
 		}
+	});
+
+	socket.on('pm', function(pmData){
+		var toUID = users.indexOf(pmData.to);
+		pmData["toUID"] = toUID;
+		pmData["fromUID"] = UID;
+		logger(pmData);
+		io.emit('pm sent',pmData);
 	});
 
 	socket.on('disconnect', function(){ //when the client disconnects from the server, 
