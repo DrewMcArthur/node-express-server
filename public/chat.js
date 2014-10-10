@@ -3,7 +3,7 @@ var name; //defines user's name
 var isMobile; //boolean if device is mobile
 var isTyping; //boolean if user is typing;
 var nameChanged; //boolean if user has changed their name
-var mutedList = ""; //list of names user has muted
+var mutedList = []; //list of names user has muted
 var numOfMessages = 0;
 
 if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) { 
@@ -71,9 +71,9 @@ function addChatMessage(msg){
 	$('#messages').append('<li id=\"'+numOfMessages+'\" class=\"message '+ msg.name + '\">' + msg.name + ":	" + msg.body + "<br/></li>"); //append a message as an li
 	$('#messages').scrollTop($('#messages')[0].scrollHeight); //and scroll to the bottom of the page
 	$('.'+name).addClass('self');//finds messages with the class of the current user, and adds a class to show that the user posted that message.
-	if(mutedList.indexOf(msg.name) > -1){$('#'+numOfMessages).addClass("hidden");}
+	if(mutedList.indexOf(msg.name) > -1){$('#'+numOfMessages).addClass("hidden");} //if the user is on the mutedList, make their message hidden.  
 	if($('#messages ul.typingMessage').length){ 
-		$('#messages li.message:last-child').insertBefore($('#messages ul.typingMessage'));
+		$('#messages li.message:last-child').insertBefore($('#messages ul.typingMessage')); //if someone is typing, insert the message before that.
 	}
 }
 
@@ -123,7 +123,12 @@ function clientCommand(com){
 			addChatMessage(serverMessage("Who would you like to mute? Type it like this: \n/mute username"));
 		} else {
 			var muted = com.replace(/mute\s+/g,"");
-			if(!(mutedList.indexOf(muted) > -1)){ mutedList += muted + ", "; } //assuming the name isn't already on the list, add the name you're muting onto the list
+			if(!(mutedList.indexOf(muted) > -1)){ 
+//				mutedList += muted + ", "; //assuming the name isn't already on the list, add the name you're muting onto the list
+				mutedList[mutedList.length] = muted; //assuming the name isn't already on the list, add the name you're muting onto the list
+			} else {
+				mutedList.splice(mutedList.indexOf(muted),1);
+			}
 		}
 	}else{
 		var message = {name:"Error",body:"Sorry, I don't have a help message for \"" + com +"\". Was it a typo? If you didn't mean to type a command, try again without the / in front."};
