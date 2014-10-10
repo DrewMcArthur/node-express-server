@@ -1,4 +1,5 @@
 var socket = io();
+var UID;
 var name; //defines user's name
 var isMobile; //boolean if device is mobile
 var isTyping; //boolean if user is typing;
@@ -14,6 +15,9 @@ if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
 } 
 socket.on('name is', function(nameReceived){
 	name = nameReceived;
+});
+socket.on('UID is', function(UIDReceived){
+	UID = UIDReceived;
 });
 
 socket.on('ask if typing', function(){ //when the server asks if the user is typing
@@ -65,13 +69,35 @@ $('form').submit(function(){ //when user presses 'send'
 }); //end form submit function
 
 socket.on('chat message', function(msg){addChatMessage(msg)}); //when the server sends a chat message, add that chat message
+socket.on('pm sent',function(pmData){
+	if(UID == pmData.toUID){
+		var pmsg = {
+			name: pmData.from,
+			timestamp: pmData.timestamp,
+			body: pmData.body,
+			isPM: "true"
+		}
+		addChatMessage(pmsg);
+	}
+	if(UID == pmData.fromUID){
+		var pmsg = {
+			name: pmData.from,
+			timestamp: pmData.timestamp,
+			body: "To "+pmData.to +": "+pmData.body,
+			isPM: "true"
+		}
+		addChatMessage(pmsg);
+	}
+});
 
 function addChatMessage(msg){
 	numOfMessages++;
 	$('#messages').append('<li id=\"'+numOfMessages+'\" class=\"message '+ msg.name + '\">' + msg.name + ":	" + msg.body + "<br/></li>"); //append a message as an li
 	$('#messages').scrollTop($('#messages')[0].scrollHeight); //and scroll to the bottom of the page
 	$('.'+name).addClass('self');//finds messages with the class of the current user, and adds a class to show that the user posted that message.
+	$('.'+name).addClass('self');//finds messages with the class of the current user, and adds a class to show that the user posted that message.
 	if(mutedList.indexOf(msg.name) > -1){$('#'+numOfMessages).addClass("hidden");} //if the user is on the mutedList, make their message hidden.  
+	if(!(typeof msg.isPM === 'undefined')){$('#'+numOfMessages).addClass("pm");} //if the isPM data value is set, then add the 'pm' css class
 	if($('#messages ul.typingMessage').length){ 
 		$('#messages li.message:last-child').insertBefore($('#messages ul.typingMessage')); //if someone is typing, insert the message before that.
 	}
@@ -107,18 +133,23 @@ function clientCommand(com){
 		} else if(!nameChanged){
 			nameID = name.replace(/\s/g,"");  // this is to prevent bad id's on the elements by username
 			$('#'+nameID).remove(); // find the typing message for that user, and remove it, since that user no longer exists. // should probably add .typingMessage on to selector.
-			name = com.replace(/name\s*/,"");
-			if(name!=""){
-				socket.emit('answer name', name); // and answer the server
-				nameChanged = true;
+			arg = com.replace(/name\s*/,""); 
+			if(arg.replace(/\s*/g,"") != arg){ //test if name has spaces, don't allow that
+				addChatMessage(serverMessage("Sorry, names can't have spaces, try again."));
+			} else { //if no spaces, then set the name
+				name = com.replace(/name\s*/,"");
+				if(name!=""){
+					socket.emit('answer name', name); // and answer the server
+					nameChanged = true;
+				}
 			}
 		} else {
 			var message = {name:"Error",body:"You've already changed your name and we only allow you to do that once, sorry."};
 			addChatMessage(message);
 		}
-	}else if(com.indexOf("online") > -1){
+	}else if(com.indexOf("online") > -1 && com.indexOf("online") < 2){
 		socket.emit("ask who is online");
-	}else if(com.indexOf("mute") > -1){
+	}else if(com.indexOf("mute") > -1 && com.indexOf("mute") < 2){
 		if(com.replace(/\s+/g,"")=="mute"){	
 			addChatMessage(serverMessage("Who would you like to mute? Type it like this: \n/mute username"));
 		} else {
@@ -130,6 +161,18 @@ function clientCommand(com){
 				mutedList.splice(mutedList.indexOf(muted),1);
 			}
 		}
+	}else if(com.indexOf("pm") > -1 && com.indexOf("pm") < 2){
+		com = com.replace(/pm\s*/,"");
+		var toName = com.replace(/\s.*/,"");
+		var reg = new RegExp(toName+"\\s*");
+		var msgBody = com.replace(reg,"");
+		var pmData = {
+			from:name,
+			to:toName,
+			timestamp:(new Date()).toLocalString(),
+			body:msgBody
+		}
+		socket.emit("pm",pmData);
 	}else{
 		var message = {name:"Error",body:"Sorry, I don't have a help message for \"" + com +"\". Was it a typo? If you didn't mean to type a command, try again without the / in front."};
 		addChatMessage(message);
