@@ -37,27 +37,40 @@ form {
 	position:fixed;
 	height:auto;
 	width:800px;
-	li { 
-		padding: 5px 10px; 
-		background-color:#eee;
-		border-radius:18px;
-		border:1px solid black;
-		width:auto;
-		max-width:75%;
-		overflow-wrap: break-word;	
+	div.message-contain.self{
+		div.name {
+			display:none;
+		}
+		float:right;
+		div.body{
+			background-color: #cb5858;
+			width:auto;
+			float:right;
+		}
+	}
+	div.message-contain { 
+		div.body {
+			padding: 5px 10px; 
+			background-color:#eee;
+			border-radius:18px;
+			border:1px solid black;
+			overflow-wrap: break-word;	
+			float:left;
+			max-width:80%;
+		}
+		div.name {
+			margin:10px 5px;
+		}
+		width:75%;
 		float:left;
 		display:block;
 		clear:both;
 	}
-	li.self {
-		float:right;
-		background-color: #cb5858;
-	}
-	ul.typingMessage {
+	div.typingMessage {
 		width:100%;
-		li{ float:left; }
+		div{ float:left; }
 	}
-	li.pm {
+	div.pm {
 		font-style:italic;
 	}
 	.hidden{
@@ -92,10 +105,10 @@ and (max-device-width : 480px) {
 	}
 	#messages {
 		width:100%;
-		ul.typingMessage {
+		div.typingMessage {
 			width:auto;
 			text-align:center;
-			li{ 
+			div{ 
 				width:auto;
 				max-width:90%;
 				margin:auto;
@@ -103,11 +116,11 @@ and (max-device-width : 480px) {
 				text-align:center;
 				display:block;
 			}
-			li.self{
+			div.self{
 				margin-left:20%;
 			}
 		}
-		li{ 
+		div{ 
 			width:auto;
 			max-width:90%;
 			margin:.4%;
