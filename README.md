@@ -7,9 +7,9 @@ A How To for the setup.
 
     `apt-get install nodejs npm git`
 
-2. install express frameworks
+2. install express frameworks, less css parsing, and socket.io
 
-    `npm install -g express`
+    `npm install -g express socket.io less`
 
 3. clone into repository found [here](https://www.github.com/DrewMcArthur/node-express-server)
 
