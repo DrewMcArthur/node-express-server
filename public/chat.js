@@ -34,10 +34,10 @@ socket.on('typing message', function(userTyping){ // whenever a client responds 
 	userTyping.nameID = userTyping.name.replace(/\s/g,"");  // this is to prevent bad id's on the elements by username
 	if(userTyping.isTyping && !$('#'+userTyping.nameID).length && userTyping.name!=name){  
 	// if a user is typing, and the typing element for that user does not yet exist, and the user that is typing is NOT the user of this client, then
-		if(!$('#messages ul.typingMessage').length){
-			$('#messages').append("<ul class=\"typingMessage\" id=\""+userTyping.nameID+"P\"></ul>"); //append a message that says they're typing.
+		if(!$('#messages div.typingMessage').length){
+			$('#messages').append("<div class=\"typingMessage\" id=\""+userTyping.nameID+"P\"></div>"); //append a message that says they're typing.
 		}
-			$('#messages ul.typingMessage').append("<li id=\""+userTyping.nameID+"\">"+userTyping.name+" is Typing</li>"); //append a message that says they're typing.
+			$('#messages div.typingMessage').append("<div id=\""+userTyping.nameID+"\">"+userTyping.name+" is typing...</div>"); //append a message that says they're typing.
 	$('#messages').scrollTop($('#messages')[0].scrollHeight); //and scroll to the bottom of the page
 	} else {
 		if(!userTyping.isTyping && ($('#'+userTyping.nameID).length || $('#'+userTyping.nameID+'P').length )){ //if the specific user is not typing, and the typing message exists
@@ -96,14 +96,22 @@ socket.on('pm sent',function(pmData){
 
 function addChatMessage(msg){
 	numOfMessages++;
-	$('#messages').append('<li id=\"'+numOfMessages+'\" class=\"message '+ msg.name + '\">' + msg.name + ":	" + msg.body + "<br/></li>"); //append a message as an li
+	$('#messages').append(
+		'<div id=\"'+numOfMessages+'\" class=\"message-contain message '+ msg.name + '\">' + 
+			'<div class = \"name\">' + msg.name + "</div>" +
+			'<div class = \"body\">' + msg.body + "</div>" +
+		'</div>'
+	);
 	$('#messages').scrollTop($('#messages')[0].scrollHeight); //and scroll to the bottom of the page
 	$('.'+name).addClass('self');//finds messages with the class of the current user, and adds a class to show that the user posted that message.
 	$('.'+name).addClass('self');//finds messages with the class of the current user, and adds a class to show that the user posted that message.
 	if(mutedList.indexOf(msg.name) > -1){$('#'+numOfMessages).addClass("hidden");} //if the user is on the mutedList, make their message hidden.  
 	if(!(typeof msg.isPM === 'undefined')){$('#'+numOfMessages).addClass("pm");} //if the isPM data value is set, then add the 'pm' css class
-	if($('#messages ul.typingMessage').length){ 
-		$('#messages li.message:last-child').insertBefore($('#messages ul.typingMessage')); //if someone is typing, insert the message before that.
+	if($('#messages #'+(numOfMessages-1)).hasClass(msg.name)){ 
+		$('#messages div.message-contain:last-child div.name').addClass('hidden');
+	}
+	if($('#messages div.typingMessage').length){ 
+		$('#messages div.message:last-child').insertBefore($('#messages div.typingMessage')); //if someone is typing, insert the message before that.
 	}
 }
 
