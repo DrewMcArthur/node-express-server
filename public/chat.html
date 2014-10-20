@@ -1,17 +1,19 @@
 <!doctype html>
 <html>
-  <head>
-    <title>Socket.IO chat</title>
-		<link rel="stylesheet/less" type="text/css" href="/chat.less"/>
-		<script src="//cdnjs.cloudflare.com/ajax/libs/less.js/1.7.5/less.min.js"></script>
-  </head>
-  <body>
+<head>
+	<title>Socket.IO chat</title>
+	<link rel="stylesheet/less" type="text/css" href="/chat.less"/>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/less.js/1.7.5/less.min.js"></script>
+</head>
+<body>
+	<script src="/fb-login.js"></script>
+	<fb:login-button scope="public_profile,email" onlogin="checkLoginState();"></fb:login-button>
 	<div id="messages"></div>
 	<form action="">
 		<input id="m" autocomplete="off" /><button>Send</button>
 	</form>
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
+	<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
 	<script src="/chat.js"></script>
-  </body>
+</body>
 </html>
