@@ -5,7 +5,9 @@ var isMobile; //boolean if device is mobile
 var isTyping; //boolean if user is typing;
 var nameChanged; //boolean if user has changed their name
 var mutedList = []; //list of names user has muted
-var numOfMessages = 0;
+var numOfMessages = 0; //current number of messages locally
+var isWindowFocused; //boolean if window is open
+var notificationHardSwitch = true ; //user defined yes or no to notifications, true by default
 
 if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) { 
 	//tests if device is a hand held and creates boolean isMobile  (true if mobile, else false)
@@ -113,6 +115,9 @@ function addChatMessage(msg){
 	if($('#messages div.typingMessage').length){ 
 		$('#messages div.message:last-child').insertBefore($('#messages div.typingMessage')); //if someone is typing, insert the message before that.
 	}
+	if(notificationHardSwitch && !isWindowFocused && msg.name !== "Server" && msg.name !== name){
+		notifyMe(msg);
+	}
 }
 
 /*
@@ -185,8 +190,15 @@ function clientCommand(com){
 			body:msgBody
 		}
 		socket.emit("pm",pmData);
+	}else if(com.indexOf("notify") > -1 && com.indexOf("notify") < 2){
+		com = com.replace(/notify\s*/,"");
+		if(com == ""){
+			addChatMessage(serverMessage("Your notification setting is set to " + notificationHardSwitch));
+		}else if (com == "on" || com == "true" || com == "y" || com == "yes") { notificationHardSwitch = true; 
+		}else if (com == "off" || com == "false" || com == "n" || com == "no") { notificationHardSwitch = false; 
+		}else { addChatMessage(serverMessage("Sorry, that didn't change your notification setting. Try again with on/off, true/false, or yes/no.")); }
 	}else{
-		var message = {name:"Error",body:"Sorry, I don't have a help message for \"" + com +"\". Was it a typo? If you didn't mean to type a command, try again without the / in front."};
+		var message = {name:"Server",body:"Error: Sorry, I don't have a help message for \"" + com +"\". Was it a typo? If you didn't mean to type a command, try again without the / in front."};
 		addChatMessage(message);
 	}
 }
@@ -228,4 +240,42 @@ $(document).ready(function(){
 	var messageheight = $(document).height()-$('form').height();
 	$('#messages').css('max-height',messageheight); //max height of the messages div should be the ( document height - the height of the input bar ), any larger would be scrolled
 	$('#messages').css('bottom',$('form').height()+6); //sets bottom of the messages (position:fixed) to 6 more than the height of the input bar
+	$([window, document]).focusin(function(){ isWindowFocused = true; }).focusout(function(){ isWindowFocused = false; });
 });
+
+function notifyMe(msg){
+    // If the user agreed to get notified
+    // Let's try to send ten notifications
+    if (window.Notification && Notification.permission === "granted") {
+	var n = new Notification("New Message from " + msg.name + "...", {body: msg.body});
+	n.onshow = function(){setTimeout(n.close.bind(n),5000);};
+    }
+
+    // If the user hasn't told if he wants to be notified or not
+    // Note: because of Chrome, we are not sure the permission property
+    // is set, therefore it's unsafe to check for the "default" value.
+    else if (window.Notification && Notification.permission !== "denied") {
+      Notification.requestPermission(function (status) {
+        if (Notification.permission !== status) {
+          Notification.permission = status;
+        }
+
+        // If the user said okay
+        if (status === "granted") {
+            var n = new Notification("Hi! ", {tag: ''});
+        }
+
+        // Otherwise, we can fallback to a regular modal alert
+        else {
+          alert("Hi!");
+        }
+      });
+    }
+
+    // If the user refuses to get notified
+    else {
+      // We can fallback to a regular modal alert
+      alert("Hi!");
+    }
+}
+
