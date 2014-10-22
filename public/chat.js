@@ -45,7 +45,7 @@ socket.on('typing message', function(userTyping){ // whenever a client responds 
 		if(!$('#messages div.typingMessage').length){
 			$('#messages').append("<div class=\"typingMessage\" id=\""+userTyping.nameID+"P\"></div>"); //append a message that says they're typing.
 		}
-			$('#messages div.typingMessage').append("<div id=\""+userTyping.nameID+"\">"+userTyping.global.name+" is typing...</div>"); //append a message that says they're typing.
+			$('#messages div.typingMessage').append("<div id=\""+userTyping.nameID+"\">"+userTyping.name+" is typing...</div>"); //append a message that says they're typing.
 	$('#messages').scrollTop($('#messages')[0].scrollHeight); //and scroll to the bottom of the page
 	} else {
 		if(!userTyping.isTyping && ($('#'+userTyping.nameID).length || $('#'+userTyping.nameID+'P').length )){ //if the specific user is not typing, and the typing message exists
