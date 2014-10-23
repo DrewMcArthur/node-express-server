@@ -4,24 +4,24 @@
 	<title>Socket.IO chat</title>
 	<link rel="stylesheet/less" type="text/css" href="/chat.less"/>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/less.js/1.7.5/less.min.js"></script>
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"> </script>
-	<script src="https://apis.google.com/js/client:platform.js?onload=start" async defer> </script>
+	<script src="https://apis.google.com/js/client:platform.js" async defer></script>
+
+	<script src="/fb-login.js"></script>
+	<script src="/g+-login.js"></script>
 </head>
 <body>
 	<!-- google and fb sign in elements -->
-	<div id="signinButton">
-		<span class="g-signin"
-			data-scope="https://www.googleapis.com/auth/plus.login"
-			data-clientid="932268475976-11mkm4caelnnsngiqlflfppntpg1tp2p.apps.googleusercontent.com"
-			data-redirecturi="postmessage"
-			data-accesstype="offline"
-			data-cookiepolicy="single_host_origin"
-			data-callback="signInCallback">
-		</span>
-	</div>
-	<div id="result"></div>
-	<script src="/fb-login.js"></script>
 	<fb:login-button scope="public_profile,email" onlogin="checkLoginState();"></fb:login-button>
+	<span id="signinButton">
+		<span
+			class="g-signin"
+			data-callback="signinCallback"
+			data-clientid="932268475976"
+			data-cookiepolicy="single_host_origin"
+			data-requestvisibleactions="http://schema.org/AddAction"
+			data-scope="profile">
+		</span>
+	</span>
 	<!-- end login els -->
 	<div id="messages"></div>
 	<form action="">
@@ -29,7 +29,6 @@
 	</form>
 	<script src="/socket.io/socket.io.js"></script>
 	<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
-	<script src="/g+-signin.js"></script>
 	<script src="/chat.js"></script>
 </body>
 </html>
