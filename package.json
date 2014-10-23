@@ -6,6 +6,7 @@
   "dependencies": {
     "express": "~4.9.4",
     "socket.io": "~1.1.0",
-		"less": "latest"
+    "less": "latest",
+    "mysql": "~2.5.2"
   }
 }

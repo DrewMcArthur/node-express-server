@@ -124,7 +124,6 @@ function addChatMessage(msg){
 	if(global.notificationHardSwitch && !global.isWindowFocused && msg.name !== "Server" && msg.name !== global.name){
 		notifyMe(msg);
 	}
-	console.log(global.fbID);
 }
 
 /*
