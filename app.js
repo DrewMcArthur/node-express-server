@@ -16,13 +16,14 @@ var global = {
 
 app.use(express.static(__dirname + '/public')); // allow access to all files in ./public
 
-var sqlConn = mysql.createConnection({ //initiates mysql connection
+var db = mysql.createConnection({ //initiates mysql connection
 	host : "localhost",
 	user : "root",
 	password : "password"
 });
 
-sqlConn.connect();
+db.connect();
+db.query("use chatapp");
 
 io.on('connection', function(socket){ //on connection to a socket,
 
@@ -73,7 +74,17 @@ io.on('connection', function(socket){ //on connection to a socket,
 
 	socket.on('social login', function(data){
 		logger(serverMessage(JSON.stringify(data)));
+
+		var nid;
+		if (network == "facebook") { 
+			nid = "fbid"; 
+		} else if (network=="google"){ 
+			nid = "gid"; 
+		}
 		
+		//find nid in table users in column nid;
+		//if nid exists, then get the column name in that row, and set that value equal to the user's name. 
+		//if it doesn't exist, create the entry and prompt for the user's name
 	});
 
 	socket.on('answer name', function(name){ // when the client responds, 
