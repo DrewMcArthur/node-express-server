@@ -1,14 +1,14 @@
 // This is called with the results from from FB.getLoginStatus().
   function statusChangeCallback(response) {
     global.fbID = response.authResponse.userID;
-    sendSUID("test");
     // The response object is returned with a status field that lets the
     // app know the current login status of the person.
     // Full docs on the response object can be found in the documentation
     // for FB.getLoginStatus().
     if (response.status === 'connected') {
       // Logged into your app and Facebook.
-      testAPI();
+	    testAPI();
+//	    sendSUID("facebook");
     } else if (response.status === 'not_authorized') {
       // The person is logged into Facebook, but not your app.
 //      document.getElementById('status').innerHTML = 'Please log ' + 'into this app.';
@@ -71,15 +71,25 @@
       //console.log('Successful login for: ' + response.name);//response.name is name of user, helpful information
 //      document.getElementById('status').innerHTML = 'Thanks for logging in, ' + response.name + '!';
 	global.fbname = response.name;
+	sendSUID("facebook",global);
     });
   }
 
-function sendSUID(info){
-	var data = {
-		network: "facebook",
-		id: global.fbID,
-		name: global.fbname,
-		global: global
+function sendSUID(network,global){
+	if(network=="facebook"){
+		var data = {
+			network: "facebook",
+			global: global
+		}
+	}else if(network=="google"){
+		var data = {
+			network: "google",
+			global: global
+		}
+	//why is global.gID and gname undefined ?////////?????????????????????????????//
+		console.log(data.global);
+		console.log("NETWORK IS GOOGLE");
 	}
+
 	socket.emit('social login',data);	
 }

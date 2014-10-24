@@ -62,6 +62,9 @@ io.on('connection', function(socket){ //on connection to a socket,
 	}
 	socket.emit('chat message',serverMessage("Your name is currently just your UID.  You can change this by typing \"/name [your new name]\", for Example: \"/name john\""));
 
+	socket.on('social login', function(data){
+		console.log(data);
+	});
 
 	socket.on('answer name', function(name){ // when the client responds, 
 

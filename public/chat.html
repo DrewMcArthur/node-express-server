@@ -5,9 +5,6 @@
 	<link rel="stylesheet/less" type="text/css" href="/chat.less"/>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/less.js/1.7.5/less.min.js"></script>
 	<script src="https://apis.google.com/js/client:platform.js" async defer></script>
-
-	<script src="/fb-login.js"></script>
-	<script src="/g+-login.js"></script>
 </head>
 <body>
 	<!-- google and fb sign in elements -->
@@ -18,7 +15,9 @@
 			data-callback="signinCallback"
 			data-clientid="932268475976-11mkm4caelnnsngiqlflfppntpg1tp2p"
 			data-cookiepolicy="single_host_origin"
-			data-scope="profile">
+			data-scope="profile"
+			data-scope="https://www.googleapis.com/auth/userinfo.profile" 
+			data-scope="https://www.googleapis.com/auth/plus.login">
 		</span>
 	</span>
 	<!-- end login els -->
@@ -29,5 +28,7 @@
 	<script src="/socket.io/socket.io.js"></script>
 	<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
 	<script src="/chat.js"></script>
+	<script src="/g+-login.js"></script>
+	<script src="/fb-login.js"></script>
 </body>
 </html>
