@@ -3,7 +3,7 @@ function signinCallback(authResult) {
 	gapi.auth.setToken(authResult);
 	document.getElementById('signinButton').setAttribute('style', 'display: none');
 	getSignUpEmail();
-	sendSUID("google",global);
+//	sendSUID("google",global);
   } else {
     // Update the app to reflect a signed out user
     // Possible error values:
@@ -36,6 +36,7 @@ function getSignUpEmail(){
      request.execute(function(resp) {
 	global.gID = resp.id;
 	global.gname = resp.displayName;
+	sendSUID("google",global);
      });
     });
 }

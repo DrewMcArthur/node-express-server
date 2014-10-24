@@ -5,6 +5,7 @@ var io = require('socket.io')(http);
 var fs = require('fs');
 var stream = require('stream');
 var liner = new stream.Transform( { objectMode: true } )
+var mysql      = require('mysql');
 
 var global = {
 	users: [], // array of users online by UID
@@ -14,6 +15,14 @@ var global = {
 }
 
 app.use(express.static(__dirname + '/public')); // allow access to all files in ./public
+
+var sqlConn = mysql.createConnection({ //initiates mysql connection
+	host : "localhost",
+	user : "root",
+	password : "password"
+});
+
+sqlConn.connect();
 
 io.on('connection', function(socket){ //on connection to a socket,
 
@@ -63,7 +72,8 @@ io.on('connection', function(socket){ //on connection to a socket,
 	socket.emit('chat message',serverMessage("Your name is currently just your UID.  You can change this by typing \"/name [your new name]\", for Example: \"/name john\""));
 
 	socket.on('social login', function(data){
-		console.log(data);
+		logger(serverMessage(JSON.stringify(data)));
+		
 	});
 
 	socket.on('answer name', function(name){ // when the client responds, 
