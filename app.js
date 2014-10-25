@@ -13,17 +13,13 @@ var global = {
 	userList: [],  // array of users online in order (no holes in index)
 	uidCeil: 10000, // UID will be random number between 1 and uidCeil
 }
-
-app.use(express.static(__dirname + '/public')); // allow access to all files in ./public
-
-var db = mysql.createConnection({ //initiates mysql connection
+var sqlconnarg = { //arguments for the sql connection
 	host : "localhost",
 	user : "root",
 	password : "password"
-});
+}
 
-db.connect();
-db.query("use chatapp");
+app.use(express.static(__dirname + '/public')); // allow access to all files in ./public
 
 io.on('connection', function(socket){ //on connection to a socket,
 
@@ -76,15 +72,45 @@ io.on('connection', function(socket){ //on connection to a socket,
 		logger(serverMessage(JSON.stringify(data)));
 
 		var nid;
-		if (network == "facebook") { 
-			nid = "fbid"; 
-		} else if (network=="google"){ 
-			nid = "gid"; 
+		if (data.network == "facebook") { 
+			nid = data.global.fbID; 
+		} else if (data.network=="google"){ 
+			nid = data.global.gID; 
 		}
+
+		var db = mysql.createConnection(sqlconnarg); // connect to database
+		db.connect();
+		db.query("use chatapp");
 		
 		//find nid in table users in column nid;
 		//if nid exists, then get the column name in that row, and set that value equal to the user's name. 
-		//if it doesn't exist, create the entry and prompt for the user's name
+		var insertStatement = "INSERT INTO usernames (name, uid)";
+		var values = "VALUES (" + db.escape(data.global.name) + "," + db.escape(nid) + ");";
+		var checkIfExists = "SELECT 1 FROM usernames WHERE uid = " + db.escape(nid);
+		db.query(checkIfExists,function(err, res){
+			if(err){throw(err);}
+			console.log(res);
+			if(JSON.stringify(res)!='[]') { 
+				console.log("user exists in database"); 
+				//find uid in db and return name;
+			}else{ 
+				if(nid != null){
+					if(!data.global.nameChanged){
+						db.query(insertStatement + values,function(err, res){
+							if(err){throw(err);}
+						});
+						db.query('select * from usernames',function(err, res){
+							if(err){throw(err);}
+							console.log(res);
+						});
+					} else {
+						console.log("name hasn't been changed yet");
+					}
+				}
+			}
+		});
+		db.end(function(err){if(err){throw(err);}}); //ends database connection;
+				//if it doesn't exist, create the entry and prompt for the user's name
 	});
 
 	socket.on('answer name', function(name){ // when the client responds, 
@@ -225,3 +251,4 @@ Date.prototype.toLocalString = function() { // concat time strings to form one w
 http.listen(80, function(){ //listen for requests at ipaddress:80
 	logger(serverMessage('Server is running on port 80'));  //callback function, completely optional.
 });
+
