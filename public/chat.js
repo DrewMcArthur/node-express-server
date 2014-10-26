@@ -10,7 +10,7 @@ var global = {
 	numOfMessages: 0, //current number of messages locally
 	isWindowFocused: '', //boolean if window is open
 	notificationHardSwitch: true, //user defined yes or no to notifications, true by default
-	sociallyLogged: false // if user has logged in with ( fb || google )
+	sociallyLoggedIn: false // if user has logged in with ( fb || google )
 }
 
 if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) { 
