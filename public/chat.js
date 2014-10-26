@@ -9,7 +9,8 @@ var global = {
 	mutedList: [], //list of names user has muted
 	numOfMessages: 0, //current number of messages locally
 	isWindowFocused: '', //boolean if window is open
-	notificationHardSwitch: true //user defined yes or no to notifications, true by default
+	notificationHardSwitch: true, //user defined yes or no to notifications, true by default
+	sociallyLogged: false // if user has logged in with ( fb || google )
 }
 
 if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) { 
@@ -153,7 +154,8 @@ function clientCommand(com){
 	//		socket.emit('set ip name', nameSet);
 	/*	} else*/ if(com.replace(/\s+/g,"")=="name"){	
 			addChatMessage(serverMessage("Your name is " + global.name));
-		} else if(!global.nameChanged){
+//		} else if(!global.nameChanged){
+		} else {
 			var nameID = global.name.replace(/\s/g,"");  // this is to prevent bad id's on the elements by username
 			$('#'+nameID).remove(); // find the typing message for that user, and remove it, since that user no longer exists. // should probably add .typingMessage on to selector.
 			var arg = com.replace(/name\s*/,""); 
@@ -162,13 +164,21 @@ function clientCommand(com){
 			} else { //if no spaces, then set the name
 				global.name = com.replace(/name\s*/,"");
 				if(global.name!=""){
-					socket.emit('answer name', global.name); // and answer the server
+					var answerArgs = {
+						name: global.name,
+						sociallyLoggedIn: global.sociallyLoggedIn,
+						gid: global.gID,
+						fbid: global.fbID,
+					}
+					socket.emit('answer name', answerArgs); // and answer the server
 					global.nameChanged = true;
 				}
 			}
+/*
 		} else {
 			var message = {name:"Error",body:"You've already changed your name and we only allow you to do that once, sorry."};
 			addChatMessage(message);
+*/
 		}
 	}else if(com.indexOf("online") > -1 && com.indexOf("online") < 2){
 		socket.emit("ask who is online");
@@ -247,6 +257,9 @@ $(document).ready(function(){
 	$('#messages').css('max-height',messageheight); //max height of the messages div should be the ( document height - the height of the input bar ), any larger would be scrolled
 	$('#messages').css('bottom',$('form').height()+6); //sets bottom of the messages (position:fixed) to 6 more than the height of the input bar
 	$([window, document]).focusin(function(){ global.isWindowFocused = true; }).focusout(function(){ global.isWindowFocused = false; });
+	if(global.isMobile){
+		$("body").width($(window).width());
+	}
 });
 
 function notifyMe(msg){

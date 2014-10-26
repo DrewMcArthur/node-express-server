@@ -5,19 +5,21 @@ var io = require('socket.io')(http);
 var fs = require('fs');
 var stream = require('stream');
 var liner = new stream.Transform( { objectMode: true } )
-var mysql      = require('mysql');
+var mysql = require('mysql');
 
 var global = {
 	users: [], // array of users online by UID
 	numOfUsersOnline: 0, // incremented and decremented on connect and disconnect
 	userList: [],  // array of users online in order (no holes in index)
 	uidCeil: 10000, // UID will be random number between 1 and uidCeil
+//	sociallyLoggedIn: false; // boolean if user has logged in with ( fb || google )  //this can't be a global variable silly
 }
 var sqlconnarg = { //arguments for the sql connection
 	host : "localhost",
 	user : "root",
 	password : "password"
 }
+//var db = mysql.createConnection(sqlconnarg); // connect to database
 
 app.use(express.static(__dirname + '/public')); // allow access to all files in ./public
 
@@ -71,59 +73,63 @@ io.on('connection', function(socket){ //on connection to a socket,
 	socket.on('social login', function(data){
 		logger(serverMessage(JSON.stringify(data)));
 
-		var nid;
-		if (data.network == "facebook") { 
-			nid = data.global.fbID; 
-		} else if (data.network=="google"){ 
-			nid = data.global.gID; 
-		}
+		var nid; if (data.network == "facebook") { nid = data.global.fbID; } else if (data.network=="google"){ nid = data.global.gID; }
 
 		var db = mysql.createConnection(sqlconnarg); // connect to database
-		db.connect();
-		db.query("use chatapp");
+		db.connect(); db.query("use chatapp");
 		
 		//find nid in table users in column nid;
 		//if nid exists, then get the column name in that row, and set that value equal to the user's name. 
-		var insertStatement = "INSERT INTO usernames (name, uid)";
-		var values = "VALUES (" + db.escape(data.global.name) + "," + db.escape(nid) + ");";
-		var checkIfExists = "SELECT 1 FROM usernames WHERE uid = " + db.escape(nid);
-		db.query(checkIfExists,function(err, res){
-			if(err){throw(err);}
-			console.log(res);
-			if(JSON.stringify(res)!='[]') { 
-				console.log("user exists in database"); 
-				//find uid in db and return name;
-			}else{ 
-				if(nid != null){
-					if(!data.global.nameChanged){
-						db.query(insertStatement + values,function(err, res){
-							if(err){throw(err);}
-						});
-						db.query('select * from usernames',function(err, res){
-							if(err){throw(err);}
-							console.log(res);
+		var insertStatement = "INSERT INTO usernames (name, uid)"; //mysql statement saying to add something into a table 'usernames'
+		var values = "VALUES (" + db.escape(data.global.name) + "," + db.escape(nid) + ");"; //mysql statement of what to add, used with statement above
+		var checkIfExists = "SELECT name FROM usernames WHERE uid = " + db.escape(nid); //statement to check if the uid exists in the table already
+		db.query(checkIfExists,function(err, res){ // make sql query to db to check if the uid exists already
+			if(err){throw(err);} //error checking
+			if(JSON.stringify(res)!='[]') {  //if the response is not empty, i.e, there is a row for that uid, then
+				var socialName = JSON.parse(JSON.stringify(res).replace(/\[/g,"").replace(/\]/g,"")).name;  // get name from response
+				nameChange(UID,socialName); //tell client their name is socialName, and update userList etc.
+				socket.emit('name is', socialName);
+			}else{ //if it doesn't exist, create the entry and prompt for the user's name
+				if(nid != null){ // to make sure the user has a socialid, 
+					if(data.global.nameChanged){ //if they have changed their name from the standard userXXXX,
+						db.query(insertStatement + values,function(err, res){ //add the user with that uid and name into the table usernames
+							if(err){throw(err);} //error checking
+							db.query('select * from usernames',function(err, res){ // now log the table after this addition
+								if(err){throw(err);}
+								logger(res);
+							});
 						});
 					} else {
-						console.log("name hasn't been changed yet");
+						//if the user hasn't changed their name yet, now we just have to wait until they change their name
 					}
 				}
 			}
 		});
 		db.end(function(err){if(err){throw(err);}}); //ends database connection;
-				//if it doesn't exist, create the entry and prompt for the user's name
 	});
 
-	socket.on('answer name', function(name){ // when the client responds, 
+	socket.on('answer name', function(arg){
+		nameChange(UID,arg.name);
+		if (arg.sociallyLoggedIn) {
+			var db = mysql.createConnection(sqlconnarg); // connect to database
+			db.connect(); db.query("use chatapp");
 
-		var nameChange = "user"+UID+" changed their name to \""+name+"\"."; //a person just entered the chat
-		global.users[UID] = name; //all names of people online
-		logger(serverMessage(nameChange)); // notify server that user is online
+			var nid; if (arg.fbid != "") { nid = arg.fbid; } else if (arg.gid != ""){ nid = arg.gid; }
+			var insertStatement = "INSERT INTO usernames (name, uid)"; //mysql statement saying to add something into a table 'usernames'
+			var values = "VALUES (" + db.escape(arg.name) + "," + db.escape(nid) + ");"; //mysql statement of what to add, used with statement above
+			var checkIfExists = "SELECT name FROM usernames WHERE uid = " + db.escape(nid); //statement to check if the uid exists in the table already
+			db.query(checkIfExists, function(err, res){
+				if(err){throw(err)} // error checking 
+				if(JSON.stringify(res)=='[]'){
+					db.query(insertStatement + values, function(err, res){
+						if(err){throw(err);} // error checking;
+						db.query("SELECT * FROM usernames",function(err,res){ if(err){throw(err)};logger(res);}); //log db;
+					});
+				}
+			});
 
-		makeUserList(); //iterate through users, and make an array without all of the holes
-		logger(serverMessage(JSON.stringify(global.userList))); // log users online
-
-		io.emit('chat message', serverMessage(nameChange));
-
+			db.end(function(err){if(err){throw(err);}}); //ends database connection;
+		}
 	}); // end what happens when the client answers with the user's name
 	
 /*
@@ -198,6 +204,15 @@ io.on('connection', function(socket){ //on connection to a socket,
 	});
 
 });
+
+function nameChange(UID, name){ // what to do when a user changes their name,
+		var nameChange = serverMessage("user"+UID+" logged on as \""+name+"\"."); //a person just entered the chat
+		global.users[UID] = name; //all names of people online
+		logger(nameChange); // notify server that user is online
+		makeUserList(); //iterate through users, and make an array without all of the holes
+		logger(serverMessage(JSON.stringify(global.userList))); // log users online
+		io.emit('chat message', nameChange);
+	}
 
 function makeUserList(){
 	var j = 0;
