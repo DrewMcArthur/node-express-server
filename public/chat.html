@@ -8,7 +8,7 @@
 </head>
 <body>
 	<!-- google and fb sign in elements -->
-	<fb:login-button scope="public_profile,email" onlogin="checkLoginState();"></fb:login-button>
+	<div id="fb-root"> <fb:login-button scope="public_profile,email" onlogin="checkLoginState();"></fb:login-button> </div>
 	<span id="signinButton">
 		<span
 			class="g-signin"

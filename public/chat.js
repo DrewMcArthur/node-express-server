@@ -12,6 +12,7 @@ var global = {
 	notificationHardSwitch: true, //user defined yes or no to notifications, true by default
 	sociallyLoggedIn: false // if user has logged in with ( fb || google )
 }
+//if(global.sociallyLoggedIn){$('db:login-button').remove();$("span#signinButton").remove();};
 
 if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) { 
 	//tests if device is a hand held and creates boolean isMobile  (true if mobile, else false)

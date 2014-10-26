@@ -86,8 +86,16 @@ function sendSUID(network,global){
 			network: "google",
 			global: global
 		}
-	//why is global.gID and gname undefined ?////////?????????????????????????????//
 	}
 	socket.emit('social login',data);	
-	global.sociallyLoggedIn = true;
+	global.sociallyLoggedIn = true; //set the variable to true, because the user is logged in now
+	if(global.sociallyLoggedIn){
+		$("span#signinButton").remove();
+		$('#fb-root').addClass('hidden');
+		$('#fb-root').removeClass('fb_reset');
+		$('#fb-root').css({
+			'visibility': 'hidden',
+			'display': 'none'
+		});
+	}; //hide buttons 
 }
