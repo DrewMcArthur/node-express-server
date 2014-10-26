@@ -19,7 +19,7 @@ var sqlconnarg = { //arguments for the sql connection
 	user : "root",
 	password : "password"
 }
-//var db = mysql.createConnection(sqlconnarg); // connect to database
+var db = mysql.createConnection(sqlconnarg); // connect to database
 
 app.use(express.static(__dirname + '/public')); // allow access to all files in ./public
 
@@ -74,9 +74,8 @@ io.on('connection', function(socket){ //on connection to a socket,
 		logger(serverMessage(JSON.stringify(data)));
 
 		var nid; if (data.network == "facebook") { nid = data.global.fbID; } else if (data.network=="google"){ nid = data.global.gID; }
-
-		var db = mysql.createConnection(sqlconnarg); // connect to database
-		db.connect(); db.query("use chatapp");
+		//db.connect(); 
+		db.query("use chatapp");
 		
 		//find nid in table users in column nid;
 		//if nid exists, then get the column name in that row, and set that value equal to the user's name. 
@@ -105,14 +104,15 @@ io.on('connection', function(socket){ //on connection to a socket,
 				}
 			}
 		});
-		db.end(function(err){if(err){throw(err);}}); //ends database connection;
+		//db.end(function(err){if(err){throw(err);}}); //ends database connection;
 	});
 
 	socket.on('answer name', function(arg){
 		nameChange(UID,arg.name);
 		if (arg.sociallyLoggedIn) {
-			var db = mysql.createConnection(sqlconnarg); // connect to database
-			db.connect(); db.query("use chatapp");
+	//		var db = mysql.createConnection(sqlconnarg); // connect to database
+	//		db.connect(); 
+			db.query("use chatapp");
 
 			var nid; if (arg.fbid != "") { nid = arg.fbid; } else if (arg.gid != ""){ nid = arg.gid; }
 			var insertStatement = "INSERT INTO usernames (name, uid)"; //mysql statement saying to add something into a table 'usernames'
@@ -128,7 +128,7 @@ io.on('connection', function(socket){ //on connection to a socket,
 				}
 			});
 
-			db.end(function(err){if(err){throw(err);}}); //ends database connection;
+//			db.end(function(err){if(err){throw(err);}}); //ends database connection;
 		}
 	}); // end what happens when the client answers with the user's name
 	
