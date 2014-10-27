@@ -184,11 +184,13 @@ io.on('connection', function(socket){ //on connection to a socket,
 
 function nameChange(UID, name){ // what to do when a user changes their name,
 		var nameChange = serverMessage("user"+UID+" logged on as \""+name+"\"."); //a person just entered the chat
-		global.users[UID] = name; //all names of people online
-		logger(nameChange); // notify server that user is online
-		makeUserList(); //iterate through users, and make an array without all of the holes
-		logger(serverMessage(JSON.stringify(global.userList))); // log users online
-		io.emit('chat message', nameChange); //tell clients that the user changed their name
+		if(global.users[UID] != name){
+			global.users[UID] = name; //all names of people online
+			logger(nameChange); // notify server that user is online
+			makeUserList(); //iterate through users, and make an array without all of the holes
+			logger(serverMessage(JSON.stringify(global.userList))); // log users online
+			io.emit('chat message', nameChange); //tell clients that the user changed their name
+		}
 	}
 
 function makeUserList(){
