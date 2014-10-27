@@ -17,9 +17,11 @@ var global = {
 var sqlconnarg = { //arguments for the sql connection
 	host : "localhost",
 	user : "root",
-	password : "password"
+	password : "password",
+	databse: "chatapp"
 }
 var db = mysql.createConnection(sqlconnarg); // connect to database
+handleDisconnect();
 
 app.use(express.static(__dirname + '/public')); // allow access to all files in ./public
 
@@ -75,7 +77,6 @@ io.on('connection', function(socket){ //on connection to a socket,
 
 		var nid; if (data.network == "facebook") { nid = data.global.fbID; } else if (data.network=="google"){ nid = data.global.gID; }
 		//db.connect(); 
-		db.query("use chatapp");
 		
 		//find nid in table users in column nid;
 		//if nid exists, then get the column name in that row, and set that value equal to the user's name. 
@@ -112,7 +113,6 @@ io.on('connection', function(socket){ //on connection to a socket,
 		if (arg.sociallyLoggedIn) {
 	//		var db = mysql.createConnection(sqlconnarg); // connect to database
 	//		db.connect(); 
-			db.query("use chatapp");
 
 			var nid; if (arg.fbid != "") { nid = arg.fbid; } else if (arg.gid != ""){ nid = arg.gid; }
 			var insertStatement = "INSERT INTO usernames (name, uid)"; //mysql statement saying to add something into a table 'usernames'
@@ -242,6 +242,24 @@ function logger(message){
 			if(err) { console.log(err); } 
 		}
 	);
+}
+function handleDisconnect(){
+	db = mysql.createConnection(sqlconnarg); // connect to database
+	db.connect(function(err) {              // The server is either down
+		if(err) {                                     // or restarting (takes a while sometimes).
+			logger(serverMessage('error when connecting to db:'+ err));
+			setTimeout(handleDisconnect, 2000); // We introduce a delay before attempting to reconnect,
+		}                                     // to avoid a hot loop, and to allow our node script to
+	});                                     // process asynchronous requests in the meantime.
+	// If you're also serving http, display a 503 error.
+	db.on('error', function(err) {
+		logger(serverMessage('db error', err));
+		if(err.code === 'PROTOCOL_CONNECTION_LOST') { // Connection to the MySQL server is usually
+			handleDisconnect();                         // lost due to either server restart, or a
+		} else {                                      // connnection idle timeout (the wait_timeout
+			throw err;                                  // server variable configures this)
+		}
+	});
 }
 
 Date.prototype.toLocalString = function() { // concat time strings to form one with format YYMMDDhhmmss
