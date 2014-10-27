@@ -60,7 +60,7 @@ socket.on('typing message', function(userTyping){ // whenever a client responds 
 $('form').submit(function(){ //when user presses 'send'
 	if($('#m').val()){ //prevents sending of blank messages
 		var firstLetter = $('#m').val().charAt(0);
-		if(firstLetter=="/"){
+		if(firstLetter=="/"){ //check if the user is typing a command to the server
 			clientCommand($('#m').val());
 			$('#m').val(''); //clear form
 			global.isTyping = false;
@@ -231,7 +231,7 @@ function serverMessage(msgBody) {
 
 function commandHelp(com){
 	//insert here what you'll do as a function of the command input by the client
-	addChatMessage(serverMessage("/Online returns the names of users currently online.\n/name changes your name.  This can only be done once per connection.\n"));
+	addChatMessage(serverMessage("/Online returns the names of users currently online.\n/name sets your name, which will only be saved if you log on to a social network.\n/mute will hide future messages from a user.\n/pm sends a message that only the other user can see.\n/notify turns notifications on or off.\nSee the wiki on <a href='https://github.com/DrewMcArthur/node-express-server'>github</a> for more information."));
 }
 
 Date.prototype.toLocalString = function() { // concat time strings to form one with format YYMMDDhhmmss
@@ -257,44 +257,41 @@ $(document).ready(function(){
 	var messageheight = $(document).height()-$('form').height();
 	$('#messages').css('max-height',messageheight); //max height of the messages div should be the ( document height - the height of the input bar ), any larger would be scrolled
 	$('#messages').css('bottom',$('form').height()+6); //sets bottom of the messages (position:fixed) to 6 more than the height of the input bar
-	$([window, document]).focusin(function(){ global.isWindowFocused = true; n.close();}).focusout(function(){ global.isWindowFocused = false; });
-	if(global.isMobile){
-		$("body").width($(window).width());
-	}
-	$('input#m').focus();
+	$([window, document]).focusin(function(){ global.isWindowFocused = true; n.close();}).focusout(function(){ global.isWindowFocused = false; }); // set a variable to check if the user is looking at the browser tab.  used for notifications.
+	if(global.isMobile){ $("body").width($(window).width()); } //if mobile, shrink website, I don't know why i do this.
+	$('input#m').focus(); // put focus in input box
 });
 
 function notifyMe(msg){
 	function createNotification(msg){
-		if(n){n.close()};
+		if(n){n.close()}; //if a notificiation exists, close it and display the new one
 		n = new Notification("New Message from " + msg.name + "...",{
 			body: msg.body
 		});
 		n.onshow = function(){
-			setTimeout(n.close,5000);
+			setTimeout(n.close,5000); //close the notification after 5 seconds
 		},
 		n.onclick = function(){
-			window.focus();
-			n.close();
+			window.focus(); //if the user clicks, open the chat window, 
+			n.close(); // close the notification
 		}
 	}
 	// If the user agreed to get notified
 	// Let's try to send ten notifications
-	if (window.Notification && Notification.permission === "granted") {
+	if (window.Notification && Notification.permission === "granted") { //if they said yes to notifications,
 		createNotification(msg);
 	}
 
 	// If the user hasn't told if he wants to be notified or not
 	// Note: because of Chrome, we are not sure the permission property
 	// is set, therefore it's unsafe to check for the "default" value.
-	else if (window.Notification && Notification.permission !== "denied") {
-		Notification.requestPermission(function (status) {
-			if (Notification.permission !== status) {
+	else if (window.Notification && Notification.permission !== "denied") { //if they didn't
+		Notification.requestPermission(function (status) { // then just ask again!
+			if (Notification.permission !== status) { // if they answered differently, change the variable
 				Notification.permission = status;
 			}
 
-			// If the user said okay
-			if (status === "granted") {
+			if (status === "granted") { // if they said yes
 				createNotification(msg);
 			}
 		});
