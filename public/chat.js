@@ -12,7 +12,7 @@ var global = {
 	notificationHardSwitch: true, //user defined yes or no to notifications, true by default
 	sociallyLoggedIn: false // if user has logged in with ( fb || google )
 }
-//if(global.sociallyLoggedIn){$('db:login-button').remove();$("span#signinButton").remove();};
+var n; //this is the notification object.  
 
 if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) { 
 	//tests if device is a hand held and creates boolean isMobile  (true if mobile, else false)
@@ -257,45 +257,46 @@ $(document).ready(function(){
 	var messageheight = $(document).height()-$('form').height();
 	$('#messages').css('max-height',messageheight); //max height of the messages div should be the ( document height - the height of the input bar ), any larger would be scrolled
 	$('#messages').css('bottom',$('form').height()+6); //sets bottom of the messages (position:fixed) to 6 more than the height of the input bar
-	$([window, document]).focusin(function(){ global.isWindowFocused = true; }).focusout(function(){ global.isWindowFocused = false; });
+	$([window, document]).focusin(function(){ global.isWindowFocused = true; n.close();}).focusout(function(){ global.isWindowFocused = false; });
 	if(global.isMobile){
 		$("body").width($(window).width());
 	}
+	$('input#m').focus();
 });
 
 function notifyMe(msg){
-    // If the user agreed to get notified
-    // Let's try to send ten notifications
-    if (window.Notification && Notification.permission === "granted") {
-	var n = new Notification("New Message from " + msg.name + "...", {body: msg.body});
-	n.onshow = function(){setTimeout(n.close.bind(n),5000);};
-    }
+	function createNotification(msg){
+		if(n){n.close()};
+		n = new Notification("New Message from " + msg.name + "...",{
+			body: msg.body
+		});
+		n.onshow = function(){
+			setTimeout(n.close,5000);
+		},
+		n.onclick = function(){
+			window.focus();
+			n.close();
+		}
+	}
+	// If the user agreed to get notified
+	// Let's try to send ten notifications
+	if (window.Notification && Notification.permission === "granted") {
+		createNotification(msg);
+	}
 
-    // If the user hasn't told if he wants to be notified or not
-    // Note: because of Chrome, we are not sure the permission property
-    // is set, therefore it's unsafe to check for the "default" value.
-    else if (window.Notification && Notification.permission !== "denied") {
-      Notification.requestPermission(function (status) {
-        if (Notification.permission !== status) {
-          Notification.permission = status;
-        }
+	// If the user hasn't told if he wants to be notified or not
+	// Note: because of Chrome, we are not sure the permission property
+	// is set, therefore it's unsafe to check for the "default" value.
+	else if (window.Notification && Notification.permission !== "denied") {
+		Notification.requestPermission(function (status) {
+			if (Notification.permission !== status) {
+				Notification.permission = status;
+			}
 
-        // If the user said okay
-        if (status === "granted") {
-            var n = new Notification("Hi! ", {tag: ''});
-        }
-
-        // Otherwise, we can fallback to a regular modal alert
-        else {
-          alert("Hi!");
-        }
-      });
-    }
-
-    // If the user refuses to get notified
-    else {
-      // We can fallback to a regular modal alert
-      alert("Hi!");
-    }
+			// If the user said okay
+			if (status === "granted") {
+				createNotification(msg);
+			}
+		});
+	}
 }
-
