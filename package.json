@@ -1,12 +1,15 @@
 {
-  "name": "socketio-chatserver",
-  "description": "my first socket.io app",
+  "name": "chatapp",
+  "description": "A webserver to host a chat room using socket.io",
+  "homepage": "http://drewmcarthur.ddns.net/chat.html",
   "version": "0.0.1",
+  "bugs": "https://github.com/DrewMcArthur/node-express-server/issues",
+  "author": "Drew McArthur <drewmcarthur1+chatapp@gmail.com> (https://github.com/DrewMcArthur)",
   "private": false,
   "dependencies": {
-    "express": "~4.9.4",
-    "socket.io": "~1.1.0",
+    "express": "latest",
+    "socket.io": "latest",
     "less": "latest",
-    "mysql": "~2.5.2"
+    "mysql": "latest"
   }
 }

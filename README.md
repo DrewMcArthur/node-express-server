@@ -5,11 +5,11 @@ A How To for the setup.
 
 1. Install node.js, npm, and git
 
-    `apt-get install nodejs npm git`
+    `apt-get install nodejs npm git mysql-server`
 
-2. install express frameworks, less css parsing, and socket.io
+2. install express frameworks, less css parsing, node-mysql, and socket.io
 
-    `npm install -g express socket.io less`
+    `npm install -g express socket.io less mysql`
 
 3. clone into repository found [here](https://www.github.com/DrewMcArthur/node-express-server)
 
@@ -19,14 +19,10 @@ A How To for the setup.
 
     `npm install`
 
-5. run server with nodejs app.js 
+5. run server with nodejs app.js (root privelages are needed to run on port 80, however you can run the server on any port you want)
 
     `nodejs app.js`
 
-6. …?
+6. Your Web Server is now running at [`http://localhost:80`](http://localhost:80)
 
-7. Profit!
-
-8. Your Web Server is now running at [`http://localhost:1337`](http://localhost:1337)
-
-NOTE:  some commands may require root privelages, i.e. `sudo`.  See 1,2, and 4
+NOTE:  some commands may require root privelages, i.e. `sudo`.
