@@ -214,6 +214,8 @@ function clientCommand(com){
 		}else if (com == "on" || com == "true" || com == "y" || com == "yes") { global.notificationHardSwitch = true; 
 		}else if (com == "off" || com == "false" || com == "n" || com == "no") { global.notificationHardSwitch = false; 
 		}else { addChatMessage(serverMessage("Sorry, that didn't change your notification setting. Try again with on/off, true/false, or yes/no.")); }
+	}else if(com.indexOf("clear") > -1 && com.indexOf("notify") < 2){
+		$('#messages *').remove();
 	}else{
 		var message = {name:"Server",body:"Error: Sorry, I don't have a help message for \"" + com +"\". Was it a typo? If you didn't mean to type a command, try again without the / in front."};
 		addChatMessage(message);
@@ -257,14 +259,14 @@ $(document).ready(function(){
 	var messageheight = $(document).height()-$('form').height();
 	$('#messages').css('max-height',messageheight); //max height of the messages div should be the ( document height - the height of the input bar ), any larger would be scrolled
 	$('#messages').css('bottom',$('form').height()+6); //sets bottom of the messages (position:fixed) to 6 more than the height of the input bar
-	$([window, document]).focusin(function(){ global.isWindowFocused = true; n.close();}).focusout(function(){ global.isWindowFocused = false; }); // set a variable to check if the user is looking at the browser tab.  used for notifications.
+	$([window, document]).focusin(function(){ global.isWindowFocused = true; if(n != undefined){ n.close() }}).focusout(function(){ global.isWindowFocused = false; }); // set a variable to check if the user is looking at the browser tab.  used for notifications.
 	if(global.isMobile){ $("body").width($(window).width()); } //if mobile, shrink website, I don't know why i do this.
 	$('input#m').focus(); // put focus in input box
 });
 
 function notifyMe(msg){
 	function createNotification(msg){
-		if(n){n.close()}; //if a notificiation exists, close it and display the new one
+		if(n != undefined){n.close()}; //if a notificiation exists, close it and display the new one
 		n = new Notification("New Message from " + msg.name + "...",{
 			body: msg.body
 		});
