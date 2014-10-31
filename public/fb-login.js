@@ -75,27 +75,3 @@
     });
   }
 
-function sendSUID(network,global){
-	if(network=="facebook"){
-		var data = {
-			network: "facebook",
-			global: global
-		}
-	}else if(network=="google"){
-		var data = {
-			network: "google",
-			global: global
-		}
-	}
-	socket.emit('social login',data);	
-	global.sociallyLoggedIn = true; //set the variable to true, because the user is logged in now
-	if(global.sociallyLoggedIn){
-		$("span#signinButton").remove();
-		$('#fb-root').addClass('hidden');
-		$('#fb-root').removeClass('fb_reset');
-		$('#fb-root').css({
-			'visibility': 'hidden',
-			'display': 'none'
-		});
-	}; //hide buttons 
-}
