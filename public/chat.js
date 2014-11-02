@@ -208,6 +208,25 @@ function clientCommand(com){
 		}
 	}else if(com.indexOf("online") > -1 && com.indexOf("online") < 2){
 		socket.emit("ask who is online");
+	}else if(com.indexOf("color") > -1 && com.indexOf("color") < 2){ //adds ability to change color
+		var styled;
+		com = com.replace(/color/,"");
+		if(com.indexOf("but") > -1 && com.indexOf("but") < 2){ //change button color
+			com = com.replace(/but.*\s+/,"");
+			styled = $('<style>body > form > button{ background-color: ' + com + '; }</style>');
+		}else if(com.indexOf("mes") > -1 && com.indexOf("mes") < 2){ //change message color
+			com = com.replace(/mes.*\s+/,"");
+			styled = $('<style>#messages div.message-contain.self div.body{ background-color: ' + com + '; }</style>');
+		}else if(com.indexOf("reset") > -1 && com.indexOf("reset") < 2){ //reset to default
+			com = '#cb5858';
+			styled = $('<style>body > form > button,#messages div.message-contain.self div.body{ background-color: ' + com + '; }</style>');
+		}else{ //change color of both
+			styled = $('<style>body > form > button,#messages div.message-contain.self div.body{ background-color: ' + com + '; }</style>');
+		}
+		console.log(styled);
+		$('html > head').append(styled);
+		
+		
 	}else if(com.indexOf("mute") > -1 && com.indexOf("mute") < 2){
 		if(com.replace(/\s+/g,"")=="mute"){	
 			addChatMessage(serverMessage("Who would you like to mute? Type it like this: \n/mute username"));
