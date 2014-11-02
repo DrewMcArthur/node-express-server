@@ -4,7 +4,7 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var fs = require('fs');
 var stream = require('stream');
-var liner = new stream.Transform( { objectMode: true } )
+var liner = new stream.Transform( { objectMode: true } );
 var mysql = require('mysql');
 
 var global = {
@@ -13,13 +13,13 @@ var global = {
 	userList: [],  // array of users online in order (no holes in index)
 	uidCeil: 10000, // UID will be random number between 1 and uidCeil
 //	sociallyLoggedIn: false; // boolean if user has logged in with ( fb || google )  //this can't be a global variable silly
-}
+};
 var sqlconnarg = { //arguments for the sql connection
 	host : "localhost",
 	user : "root",
 	password : "password",
 	database: "chatapp"
-}
+};
 var db = mysql.createConnection(sqlconnarg); // connect to database
 handleDisconnect(); //function to hopefully fix errors caused by the mysql database connection ending after a timeout
 
@@ -34,8 +34,8 @@ io.on('connection', function(socket){ //on connection to a socket,
 	
 	var random = Math.ceil(Math.random() * global.uidCeil); //set a UID to a random number
 
-	while(global.users[random] != null){ // try doing this, and if the UID is taken, keep repeating it
-		if(global.users[random] != null){ // if UID is taken
+	while(global.users[random] !==null){ // try doing this, and if the UID is taken, keep repeating it
+		if(global.users[random] !==null){ // if UID is taken
 			random = Math.ceil(Math.random() * global.uidCeil); // get new random number for UID
 		}
 	}
@@ -87,7 +87,7 @@ io.on('connection', function(socket){ //on connection to a socket,
 				nameChange(UID,socialName); //tell client their name is socialName, and update userList etc.
 				socket.emit('name is', socialName); // tell the client what their new name is
 			}else{ //if it doesn't exist, create the entry and prompt for the user's name
-				if(nid != null){ // to make sure the user has a socialid, 
+				if(nid !== null){ // to make sure the user has a socialid, 
 					if(data.global.nameChanged){ //if they have changed their name from the standard userXXXX,
 						db.query(insertStatement + values,function(err, res){ //add the user with that uid and name into the table usernames
 							if(err){throw(err);} //error checking
@@ -109,16 +109,16 @@ io.on('connection', function(socket){ //on connection to a socket,
 	socket.on('answer name', function(arg){
 		nameChange(UID,arg.name);
 		if (arg.sociallyLoggedIn) {
-			var nid; if (arg.fbid != "") { nid = arg.fbid; } else if (arg.gid != ""){ nid = arg.gid; } //checking which network client logged in with
+			var nid; if (arg.fbid !== '') { nid = arg.fbid; } else if (arg.gid !== ""){ nid = arg.gid; } //checking which network client logged in with
 			var insertStatement = "INSERT INTO usernames (name, uid)"; //mysql statement saying to add something into a table 'usernames'
 			var values = "VALUES (" + db.escape(arg.name) + "," + db.escape(nid) + ");"; //mysql statement of what to add, used with statement above
 			var checkIfExists = "SELECT name FROM usernames WHERE uid = " + db.escape(nid); //statement to check if the uid exists in the table already
 			db.query(checkIfExists, function(err, res){ //check if the user exists in the database, and return the row where they are. 
-				if(err){throw(err)} // error checking 
+				if(err){throw(err);} // error checking 
 				if(JSON.stringify(res)=='[]'){ // as long as the user doesn't already exists, 
 					db.query(insertStatement + values, function(err, res){ //add the changed name into the database
 						if(err){throw(err);} // error checking;
-						db.query("SELECT * FROM usernames",function(err,res){ if(err){throw(err)};logger(res);}); //log db;
+						db.query("SELECT * FROM usernames",function(err,res){ if(err){ throw(err); } logger(res); });//log db
 					});
 				}
 			});
@@ -130,7 +130,7 @@ io.on('connection', function(socket){ //on connection to a socket,
 	},500); //the number here is Xms
 	
 	socket.on('typing checked', function(userTyping){ // when the client responds, 
-		if(!(userTyping.name.indexOf("user") > -1)){ // ignore all responses from clients with name user*
+		if(userTyping.name.indexOf("user") <= -1){ // ignore all responses from clients with name user*
 			io.emit('typing message',userTyping); //tell everyone the results of the previous request
 		}
 	});
@@ -161,8 +161,8 @@ io.on('connection', function(socket){ //on connection to a socket,
 
 	socket.on('pm', function(pmData){
 		var toUID = global.users.indexOf(pmData.to); //the uid to whom the pm will be sent
-		pmData["toUID"] = toUID; //setting variable of who the pm is to
-		pmData["fromUID"] = UID; //who the pm is from
+		pmData.toUID = toUID; //setting variable of who the pm is to
+		pmData.fromUID = UID; //who the pm is from
 		logger(pmData); //log data
 		io.emit('pm sent',pmData); //send the pm out to the clients //this needs to be changed so only the right user gets it
 	});
@@ -183,13 +183,13 @@ io.on('connection', function(socket){ //on connection to a socket,
 });
 
 function nameChange(UID, name){ // what to do when a user changes their name,
-		var nameChange = serverMessage("user"+UID+" logged on as \""+name+"\"."); //a person just entered the chat
+		var nameChanged = serverMessage("user"+UID+" logged on as \""+name+"\"."); //a person just entered the chat
 		if(global.users[UID] != name){
 			global.users[UID] = name; //all names of people online
-			logger(nameChange); // notify server that user is online
+			logger(nameChanged); // notify server that user is online
 			makeUserList(); //iterate through users, and make an array without all of the holes
 			logger(serverMessage(JSON.stringify(global.userList))); // log users online
-			io.emit('chat message', nameChange); //tell clients that the user changed their name
+			io.emit('chat message', nameChanged); //tell clients that the user changed their name
 		}
 	}
 
@@ -197,7 +197,7 @@ function makeUserList(){
 	var j = 0;
 	global.userList=[]; //userlist is empty
 	for (i=0;i<global.uidCeil;i++){ //iterate through all of array users
-		if(global.users[i] != null){ //if the array is not null at index i, 
+		if(global.users[i] !== null){ //if the array is not null at index i, 
 			global.userList[j] = global.users[i]; //set userList to that value at index j
 			j++; // and increment j
 		}
@@ -209,7 +209,7 @@ function serverMessage(msgBody) { // take a string, and turn it into an object t
 		name:"Server",
 		timestamp:(new Date()).toLocalString(),
 		body:msgBody
-	}
+	};
 	return msgFromServer;
 }
 function logger(message){ //log to the console and a hard file
