@@ -1,6 +1,10 @@
 $(document).ready(function(){
-	$('button.friend.btn').on('click',function(){
-		var nameGET = $('input.friend.name').val();
-		console.log(nameGET);
+	$('a.gameEnter').on('click', function(e) {
+		e.preventDefault();
+		var name = $('.username').val();
+		if(name != '')
+			location.href = '/game.html?name='+name;
+		else
+			alert('You needa put in a name');
 	});
 });
