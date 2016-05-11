@@ -37,7 +37,8 @@ div.text * {
 	font-weight: 300;
 }
 div.side div { display: none; z-index: -1;}
-div.dl-link {
+div.dl-link,
+div.cd-link {
 	border: 1px solid white;
 	border-radius: 1px;
 	padding: 10px;
@@ -152,11 +153,19 @@ div.sm-links a > div.fb {
 	div.dl-link {
 		display:none;
 	}
+	div.cd-link {
+		position: absolute;
+		left: 50%;
+		margin-left: -200px;
+		top: 45%;
+		padding: 50px;
+	}
 	div.sm-links {
 		width: 780px;
 		display: block;
 		margin-left: -390px;
 		bottom: 50px;
+		border-radius: 10px;
 	}
 	div.sm-links a > div {
 		height: 165px;	
