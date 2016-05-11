@@ -1,18 +1,29 @@
 body {
 	margin:0 auto;
 	min-width: 290px;
+	overflow: hidden;
 }
 a {
 	text-decoration: none;
 	color: white;
 }
-body {
-	overflow: hidden;
+div.bg {
+	z-index: -2;
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
 	background-image: url("/images/blurry.jpg");
 	background-color: black;
 	background-repeat: no-repeat;
 	background-position: top left;
 	background-size: cover;
+	-webkit-filter: blur(2px);
+	   -moz-filter: blur(2px);
+	    -ms-filter: blur(2px);
+	     -o-filter: blur(2px);
+		filter: blur(2px);
 }
 div.text {
 	color: white;
@@ -25,7 +36,7 @@ div.text * {
 	font-family: 'Source Code Pro';
 	font-weight: 300;
 }
-div.side div { display: none; z-index: -100;}
+div.side div { display: none; z-index: -1;}
 div.dl-link {
 	border: 1px solid white;
 	border-radius: 1px;
@@ -33,7 +44,8 @@ div.dl-link {
 	display: inline-block;
 }
 div.sm-links {
-	background-color: rgba(200,200,200,.5);
+	background-color: rgba(255,210,210,.2);
+	border-radius: 5px;
 	display: inline-flex;
 	padding: 5px;
 	margin: 10px -285px;
@@ -85,7 +97,7 @@ div.sm-links a > div.fb {
 	background-image: url("/images/fb.PNG");
 }
 @media screen and (min-width: 889px){
-	body {
+	div.bg {
 		background-size: 889px;
 		background-position: top center;
 	}
@@ -97,12 +109,11 @@ div.sm-links a > div.fb {
 		background-image: url('/images/blurry.jpg');
 		background-size: 889px;
 		background-position: top center;
-		-webkit-filter: blur(15px);
-		   -moz-filter: blur(15px);
-		    -ms-filter: blur(15px);
-		     -o-filter: blur(15px);
-			filter: blur(15px);
-		
+		-webkit-filter: blur(10px);
+		   -moz-filter: blur(10px);
+		    -ms-filter: blur(10px);
+		     -o-filter: blur(10px);
+			filter: blur(10px);
 	}
 	div.side div:nth-child(1) {
 		left: 0;
@@ -123,7 +134,7 @@ div.sm-links a > div.fb {
 		width: 100%;
 		left: 0;
 	}
-	body {
+	div.bg {
 		background-size: 600px;
 	}
 }
@@ -142,21 +153,22 @@ div.sm-links a > div.fb {
 		display:none;
 	}
 	div.sm-links {
-		width: 740px;
+		width: 780px;
 		display: block;
-		margin-left: -370px;
+		margin-left: -390px;
 		bottom: 50px;
 	}
 	div.sm-links a > div {
 		height: 165px;	
 		width: 165px;
 		border-radius: 30px;
+		margin: 10px;
 	}
 	div.sm-links a > div:hover {
 		height: 165px;	
 		width: 165px;
 		border-radius: 30px;
-		margin: 5px;
+		margin: 10px;
 	}	
 	div.text {
 		text-align: center;
@@ -164,8 +176,10 @@ div.sm-links a > div.fb {
 		width: 100%;
 		left: 0;
 	}
-	body {
+	div.bg {
 		background-size: 1700px;
+	}
+	body {
 		margin: 0;
 		width: auto;
 	}

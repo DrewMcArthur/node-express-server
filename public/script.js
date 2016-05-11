@@ -6,7 +6,7 @@ $(document).ready(function(){
 		console.log("i don't have a spotify page yet");
 	});
 });
-$(document).on('resize', function(){
+$(window).on('resize', function(){
 	var w = ($(document).width() - 889)/2;
 	$('.side div').css('width', w + 'px');
 });
