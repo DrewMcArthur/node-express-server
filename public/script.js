@@ -1,10 +1,13 @@
 $(document).ready(function(){
-	$('a.gameEnter').on('click', function(e) {
+	var w = ($(document).width() - 889)/2;
+	$('.side div').css('width', w + 'px');
+	$('.spotify').on('click', function(e){
 		e.preventDefault();
-		var name = $('.username').val();
-		if(name != '')
-			location.href = '/game.html?name='+name;
-		else
-			alert('You needa put in a name');
+		console.log("i don't have a spotify page yet");
 	});
 });
+$(document).on('resize', function(){
+	var w = ($(document).width() - 889)/2;
+	$('.side div').css('width', w + 'px');
+});
+

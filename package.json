@@ -1,15 +1,13 @@
 {
   "name": "chatapp",
-  "description": "A webserver to host a chat room using socket.io",
-  "homepage": "http://drewmcarthur.ddns.net/chat.html",
+  "description": "A webserver to host site for my rap career",
+  "homepage": "http://drewdiezel.xyz",
   "version": "0.0.1",
   "bugs": "https://github.com/DrewMcArthur/node-express-server/issues",
   "author": "Drew McArthur <drewmcarthur1+chatapp@gmail.com> (https://github.com/DrewMcArthur)",
   "private": false,
   "dependencies": {
     "express": "latest",
-    "socket.io": "latest",
-    "less": "latest",
-    "mysql": "latest"
+    "less": "latest"
   }
 }
