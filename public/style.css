@@ -44,6 +44,11 @@ div.cd-link {
 	padding: 10px;
 	display: inline-block;
 }
+div.dl-link:hover,
+div.cd-link:hover {
+	padding: 12px;
+	margin: -2px;
+}
 div.sm-links {
 	background-color: rgba(255,210,210,.2);
 	border-radius: 5px;
