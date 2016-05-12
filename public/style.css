@@ -36,6 +36,9 @@ div.text * {
 	font-family: 'Source Code Pro';
 	font-weight: 300;
 }
+.artistname {
+	margin-bottom: 20%;
+}
 div.side div { display: none; z-index: -1;}
 div.dl-link,
 div.cd-link {
