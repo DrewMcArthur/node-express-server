@@ -18,7 +18,7 @@ div.bg {
 	background-color: black;
 	background-repeat: no-repeat;
 	background-position: top left;
-	background-size: cover;
+	background-size: contain;
 	-webkit-filter: blur(2px);
 	   -moz-filter: blur(2px);
 	    -ms-filter: blur(2px);
@@ -102,7 +102,7 @@ div.sm-links a > div.insta {
 div.sm-links a > div.fb {
 	background-image: url("/images/fb.PNG");
 }
-@media screen and (min-width: 889px){
+@media screen and (min-aspect-ratio: 4/3){
 	div.bg {
 		background-size: 889px;
 		background-position: top center;
@@ -113,7 +113,9 @@ div.sm-links a > div.fb {
 		top: 0;
 		height: 100%;
 		background-image: url('/images/blurry.jpg');
+		background-color: black;
 		background-size: 889px;
+		background-repeat: no-repeat;
 		background-position: top center;
 		-webkit-filter: blur(10px);
 		   -moz-filter: blur(10px);
@@ -141,7 +143,7 @@ div.sm-links a > div.fb {
 		left: 0;
 	}
 	div.bg {
-		background-size: 600px;
+		background-size: 589px;
 	}
 }
 @media only screen and (max-device-width: 736px) {
