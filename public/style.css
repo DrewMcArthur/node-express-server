@@ -1,3 +1,12 @@
+div.dl-link,
+div.sm-links div.half:nth-child(1){
+	opacity: .3;
+	-webkit-filter: blur(1px);
+	   -moz-filter: blur(1px);
+	    -ms-filter: blur(1px);
+	     -o-filter: blur(1px);
+		filter: blur(1px);
+}
 body {
 	margin:0 auto;
 	min-width: 290px;
@@ -6,6 +15,9 @@ body {
 a {
 	text-decoration: none;
 	color: white;
+}
+.disabled {
+	cursor: not-allowed;
 }
 div.bg {
 	z-index: -2;
@@ -47,8 +59,8 @@ div.cd-link {
 	padding: 10px;
 	display: inline-block;
 }
-div.dl-link:hover,
-div.cd-link:hover {
+div.dl-link:hover:not(.disabled),
+div.cd-link:hover:not(.disabled) {
 	padding: 12px;
 	margin: -2px;
 }
@@ -64,6 +76,7 @@ div.sm-links {
 }
 div.sm-links div.half {
 	display: inline-flex;
+	opacity: .9;
 }
 div.sm-links a {
 	margin: 5px;
@@ -76,35 +89,35 @@ div.sm-links a > div {
 	border-radius: 12px;
 	margin: 5px;
 }	
-div.sm-links a > div:hover {
+div.sm-links a:not(.disabled) > div:hover {
 	height: 55px;
 	width: 55px;
 	margin: 2.5px;
 }	
-div.sm-links a > div.genius {
-	background-image: url("/images/genius.PNG");
-}	
+div.sm-links a > div.apple {
+	background-image: url("/images/apple.png");
+}
 div.sm-links a > div.spotify {
 	background-image: url("/images/spotify.png");
 }	
 div.sm-links a > div.sc {
-	background-image: url("/images/sc.PNG");
+	background-image: url("/images/sc.png");
 }	
 div.sm-links a > div.datpiff {
-	background-image: url("/images/datpiff.PNG");
+	background-image: url("/images/datpiff.png");
+}	
+div.sm-links a > div.genius {
+	background-image: url("/images/genius.png");
 }	
 div.sm-links a > div.twit {
-	background-image: url("/images/twit.PNG");
+	background-image: url("/images/twit.png");
 }	
 div.sm-links a > div.snap {
-	background-image: url("/images/snap.PNG");
+	background-image: url("/images/snap.png");
 }	
 div.sm-links a > div.insta {
-	background-image: url("/images/insta.PNG");
+	background-image: url("/images/insta.png");
 }	
-div.sm-links a > div.fb {
-	background-image: url("/images/fb.PNG");
-}
 @media screen and (min-aspect-ratio: 4/3){
 	div.bg {
 		background-size: 889px;
@@ -183,7 +196,7 @@ div.sm-links a > div.fb {
 		border-radius: 30px;
 		margin: 10px;
 	}
-	div.sm-links a > div:hover {
+	div.sm-links a > div:hover:not(.disabled) {
 		height: 165px;	
 		width: 165px;
 		border-radius: 30px;
