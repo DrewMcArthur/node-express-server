@@ -16,6 +16,9 @@ a {
 	text-decoration: none;
 	color: white;
 }
+div.sm-links span > a {
+	display: flex;
+}
 .disabled {
 	cursor: not-allowed;
 }
@@ -69,7 +72,7 @@ div.sm-links {
 	border-radius: 5px;
 	display: inline-flex;
 	padding: 5px;
-	margin: 10px -285px;
+	margin: 10px -250px;
 	position: absolute;
 	bottom: 10px;
 	left: 50%;
@@ -97,6 +100,18 @@ div.sm-links a:not(.disabled) > div:hover {
 div.sm-links a > div.apple {
 	background-image: url("/images/apple.png");
 }
+div.sm-links a > div.dl-icon{
+	background-image: url("/images/dl-icon.png");
+}
+@media screen and (min-device-width: 737px){
+	body > div.main > div.sm-links > div:nth-child(1) > span:nth-child(1) {
+		display: none;
+	}
+}
+div.sm-links a > div.bandcamp {
+	background-image: url("/images/bandcamp.png");
+	background-size: contain;
+}	
 div.sm-links a > div.spotify {
 	background-image: url("/images/spotify.png");
 }	
@@ -152,6 +167,9 @@ div.sm-links a > div.insta {
 		display: block;
 		margin-left: -145px;
 	}
+	div.sm-links > span > div > a:nth-child(1) {
+		display: block;
+	}	
 	div.text {
 		text-align: center;
 		margin: 10px auto;
@@ -162,7 +180,7 @@ div.sm-links a > div.insta {
 		background-size: 589px;
 	}
 }
-@media only screen and (max-device-width: 736px) {
+@media screen and (max-device-width: 736px) {
 	div.side { display: none; }
 	div.text {
 		font-size: 60px;
@@ -174,8 +192,11 @@ div.sm-links a > div.insta {
 		margin-bottom: 200px;
 	}
 	div.dl-link {
-		display:none;
+		display: none;
 	}
+	div.sm-links > span > div > a:nth-child(1) {
+		display: block;
+	}	
 	div.cd-link {
 		position: absolute;
 		left: 50%;
@@ -193,13 +214,13 @@ div.sm-links a > div.insta {
 	div.sm-links a > div {
 		height: 165px;	
 		width: 165px;
-		border-radius: 30px;
+		border-radius: 40px;
 		margin: 10px;
 	}
 	div.sm-links a > div:hover:not(.disabled) {
 		height: 165px;	
 		width: 165px;
-		border-radius: 30px;
+		border-radius: 40px;
 		margin: 10px;
 	}	
 	div.text {
