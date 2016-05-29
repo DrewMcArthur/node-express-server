@@ -1,7 +1,6 @@
 .remove {
 	display:none;
 }
-div.dl-link,
 div.sm-links div.half:nth-child(1){
 	opacity: .3;
 	-webkit-filter: blur(1px);
@@ -59,18 +58,6 @@ div.text * {
 }
 div.side div { display: none; z-index: -1;}
 
-div.dl-link,
-div.cd-link {
-	border: 1px solid white;
-	border-radius: 1px;
-	padding: 10px;
-	display: inline-block;
-}
-div.dl-link:hover:not(.disabled),
-div.cd-link:hover:not(.disabled) {
-	padding: 12px;
-	margin: -2px;
-}
 div.sm-links {
 	background-color: rgba(255,210,210,.2);
 	border-radius: 5px;
@@ -104,12 +91,10 @@ div.sm-links a:not(.disabled) > div:hover {
 div.sm-links a > div.cd {
 	background-image: url("/images/cd.png");
 	background-size: 100%;
+	background-position: 4px 2px;
 }
 div.sm-links a > div.apple {
 	background-image: url("/images/apple.png");
-}
-div.sm-links a > div.dl-icon{
-	background-image: url("/images/dl-icon.png");
 }
 div.sm-links a > div.bandcamp {
 	background-image: url("/images/bandcamp.png");
@@ -136,6 +121,7 @@ div.sm-links a > div.snap {
 div.sm-links a > div.insta {
 	background-image: url("/images/insta.png");
 }	
+/* if screen is wider than tall, then add side divs to make up for extra space */
 @media screen and (min-aspect-ratio: 4/3){
 	div.bg {
 		background-size: 889px;
@@ -164,6 +150,7 @@ div.sm-links a > div.insta {
 		right: 0;
 	}
 }
+/* mobile layout */
 @media screen and (max-width: 589px){
 	div.sm-links {
 		width: 280px;
@@ -189,24 +176,11 @@ div.sm-links a > div.insta {
 		font-size: 60px;
 	}
 	.albumtitle {
-		margin-bottom: 300px;
-	}
-	.artistname {
-		margin-bottom: 200px;
-	}
-	div.dl-link {
-		display: none;
+		margin-bottom: 75px;
 	}
 	div.sm-links > span > div > a:nth-child(1) {
 		display: block;
 	}	
-	div.cd-link {
-		position: absolute;
-		left: 50%;
-		margin-left: -200px;
-		top: 45%;
-		padding: 50px;
-	}
 	div.sm-links {
 		width: 780px;
 		display: block;
