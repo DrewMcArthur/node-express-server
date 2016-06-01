@@ -1,14 +1,6 @@
 .remove {
 	display:none;
 }
-div.sm-links div.half:nth-child(1){
-	opacity: .3;
-	-webkit-filter: blur(1px);
-	   -moz-filter: blur(1px);
-	    -ms-filter: blur(1px);
-	     -o-filter: blur(1px);
-		filter: blur(1px);
-}
 body {
 	margin:0 auto;
 	min-width: 290px;
@@ -20,9 +12,6 @@ a {
 }
 div.sm-links span > a {
 	display: flex;
-}
-.disabled {
-	cursor: not-allowed;
 }
 div.bg {
 	z-index: -2;
