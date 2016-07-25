@@ -1,10 +1,7 @@
 $(document).ready(function(){
 	//select the current status
-	if(status) $('.open').addClass('active');
+	if(causewayStatus) $('.open').addClass('active');
 	else $('.closed').addClass('active');
-
-	//match button size
-	//$('.status-btns .open').width($('.status-btns .closed').width()+'px');
 
 	//handle button clicking
 	$('.status-btns div').on('click', function(){

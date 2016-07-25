@@ -23,10 +23,11 @@ var centerDiv = function(selector){
 	$(selector).css('left', l + 'px');
 }
 var handleMoreInfoLocation = function(){
+	//centerDiv('.more-info');
 	var linksHeight = $('.links').position().top;
 	var height = $(window).height();
 	//if the links are more than halfway down the page, then the fun begins
-	if (linksHeight > (height / 2)){
+	if (linksHeight > (height * 3 / 5)){
 		$('#status').addClass('moreInfoOverlay');
 		$('.links').addClass('moreInfoOverlay');
 		$('.more-info').addClass('moreInfoOverlay');
@@ -43,9 +44,13 @@ $(document).ready(function(){
 				       .height(maxHeight + 'px') //set maxHeight
 				       .width((maxHeight / 235 * 313) + 'px');
 					//and then calculate width
+		$('.links').addClass('inPic');
+		$('.more-info').css('maxWidth', ((maxHeight / 235 * 313) + 'px'));
 	} else { //otherwise, just set the height
 		$('div.status-display').height(imgHeight + 'px');
 	}
+	
+	centerDiv('.links');
 
 	//bottom button handling
 	$('.links div').on('click',function(){
@@ -66,7 +71,8 @@ $(document).ready(function(){
 			//otherwise, load the page
 			$(wrapper).load(clickeduri, function(){
 				$(this).ready(function(){
-					centerDiv(wrapper);
+					if($(wrapper).hasClass('admin'))
+						centerDiv(wrapper);
 				});
 			});
 			$('.links div').removeClass('active');
@@ -75,6 +81,8 @@ $(document).ready(function(){
 				  .removeClass('/admin')
 				  .removeClass('/money')
 				  .addClass(clickeduri);
+			if($(window).height() < $('body').height())
+				$(window).scrollTo('.links');
 		}
 	});
 });
