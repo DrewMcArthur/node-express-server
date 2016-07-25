@@ -24,12 +24,17 @@ body {
 	color: #EEE;
 	font-size: 5em;
 	border-radius: 3px;
+	-webkit-transition: color 0.5s;
+		transition: color 0.5s;
+	-webkit-transition: background-color 0.5s;
+		transition: background-color 0.5s;
 }
 .links {
 	margin: auto;
 	width: 208px;
 	position:relative;
-	bottom: 15px;
+	-webkit-transition: top 0.5s;
+		transition: top 0.5s;
 }
 .links div {
 	border:1px solid #666;
@@ -51,7 +56,20 @@ body {
 	border-color: #222;
 }
 .more-info {
-	margin: 20px;
+	margin: 20px auto;
 	position: relative;
 	bottom: 0;
+	display: inline-block;
+	-webkit-transition: top 0.5s;
+		transition: top 0.5s;
+}
+#status.moreInfoOverlay {
+	background-color: rgba(255,255,255,.85);
+	color: #666;
+}
+.links.moreInfoOverlay {
+	top: -275px;
+}
+.more-info.moreInfoOverlay {
+	top: -275px;
 }

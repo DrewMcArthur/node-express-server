@@ -1,0 +1,31 @@
+.status-btns {
+	display:inline-block;
+}
+.status-btns div {
+	display: inline-block;
+	border: 1px solid #666;
+	border-radius: 3px;
+	text-align: center;
+	padding: 10px;
+	margin: 7px;
+	font-size: 1.4em;
+	cursor: pointer;
+}
+.status-btns div:hover {
+	padding: 13px;
+	margin: 4px;
+}
+.status-btns .active {
+	padding: 12px;
+	margin: 5px;
+}
+.status-btns .open:hover,
+.status-btns .open.active {
+	       color: #85df7e;
+	border-color: #85df7e;
+}
+.status-btns .closed:hover,
+.status-btns .closed.active {
+	       color: #df5737;
+	border-color: #df5737;
+}

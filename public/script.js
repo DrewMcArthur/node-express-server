@@ -15,6 +15,23 @@ var setCausewayStatus = function(stat){
 var toggleCausewayStatus = function(){
 	setCausewayStatus(!causewayStatus);
 }
+var centerDiv = function(selector){
+	//given a selector, this centers the div within its parent using left
+	var pw = $(selector).parent().width();
+	var w = $(selector).width();
+	var l = (pw - w) / 2
+	$(selector).css('left', l + 'px');
+}
+var handleMoreInfoLocation = function(){
+	var linksHeight = $('.links').position().top;
+	var height = $(window).height();
+	//if the links are more than halfway down the page, then the fun begins
+	if (linksHeight > (height / 2)){
+		$('#status').addClass('moreInfoOverlay');
+		$('.links').addClass('moreInfoOverlay');
+		$('.more-info').addClass('moreInfoOverlay');
+	}
+}
 
 $(document).ready(function(){
 	//image sizing handling
@@ -43,9 +60,15 @@ $(document).ready(function(){
 			$(wrapper).children().remove();
 			$(wrapper).removeClass(clickeduri);
 			$(this).removeClass('active');
+			$('.moreInfoOverlay').removeClass('moreInfoOverlay');
 		}else{ 
+			handleMoreInfoLocation();
 			//otherwise, load the page
-			$(wrapper).load(clickeduri);
+			$(wrapper).load(clickeduri, function(){
+				$(this).ready(function(){
+					centerDiv(wrapper);
+				});
+			});
 			$('.links div').removeClass('active');
 			$(this).addClass('active');
 			$(wrapper).removeClass('/howto')
