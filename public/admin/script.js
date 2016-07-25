@@ -11,7 +11,7 @@ $(document).ready(function(){
 	});
 	socket.on('correct-pass',function(){
 		$('input.pw').attr('placeholder', 'password');
-		$('div.more-info *').hide();
+		$('.links .admin').click();
 	});
 	socket.on('incorrect-pass', function(){
 		$('input.pw').attr('placeholder', 'incorrect');

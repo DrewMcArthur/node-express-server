@@ -4,31 +4,54 @@
 }
 body {
 	height:100%;
-	max-width: 1200px;
+	width: 100%;
+	max-width: 900px;
 	margin: auto;
+	position: absolute;
 }
 .status-display {
-	
+	background-image: url('/images/bridge_open.JPG');
+	text-align: center;
+	background-size: contain;
+	background-repeat: no-repeat;
+	margin: 20px;
+	border-radius: 3px;
+}
+#status {
+	height: 100%; 
+	width: 100%;
+	background-color: rgba(0,0,0,.2);
+	color: #EEE;
+	font-size: 5em;
+	border-radius: 3px;
 }
 .links {
 	margin: auto;
-	width: 118px;
-/*
-	padding: 0 50%;
-	position: absolute;
-	bottom: 10px;
-*/
+	width: 208px;
+	position:relative;
+	bottom: 15px;
 }
 .links div {
-	border:1px solid black;
-	display: inline-flex;
-	width: 15px;
+	border:1px solid #666;
+	border-radius: 2px;
+	color: #666;
+	display: inline-block;
+	width: 39px;
 	cursor: pointer;
 	text-align: center;
 	padding: 5px;
-	margin: 5px;
+	margin: 8px;
+	font-size: 2em;
 }
+.links div.active,
 .links div:hover {
-	padding: 7px;
-	margin: 3px;
+	padding: 8px;
+	margin: 5px;
+	color: #222;
+	border-color: #222;
+}
+.more-info {
+	margin: 20px;
+	position: relative;
+	bottom: 0;
 }
