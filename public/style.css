@@ -30,9 +30,11 @@ body {
 .links {
 	margin: auto;
 	width: 208px;
-	position: fixed;
+	position: absolute;
+	/*
 	-webkit-transition: top 0.5s;
 		transition: top 0.5s;
+	*/
 }
 .links div {
 	border:1px solid #666;
@@ -56,11 +58,13 @@ body {
 .more-info {
 	margin: 80px auto;
 	padding: 10px;
+/*
 	-webkit-transition: top 0.5s;
 		transition: top 0.5s;
+*/
 }
 .links.inPic {
-	top: -150px;
+	bottom: 40px;
 	background-color: rgba(0,0,0,.5);
 	padding: 12px;
 	border-radius: 3px;
@@ -78,6 +82,6 @@ body {
 }
 .more-info.moreInfoOverlay {
 	top: 12em;
-	position: fixed;
+	position: absolute;
 	margin: 20px;
 }

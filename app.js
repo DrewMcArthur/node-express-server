@@ -11,8 +11,6 @@ app.get('/howto',function(req, res){
 });
 
 io.on('connection',function(socket){
-	//console.log("\nINCOMING CONNECTION\n************************");
-	//console.log(socket);
 	//tell the client if the bridge is open or not
 	socket.emit('update',status);
 

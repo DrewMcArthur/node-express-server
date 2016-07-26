@@ -18,13 +18,13 @@ var toggleCausewayStatus = function(){
 var centerDiv = function(selector){
 	//given a selector, this centers the div within its parent using left
 	//var pw = $(selector).parent().width();
-	var pw = $(window).width();
-	var w = $(selector).width();
+	var pw = $(window).outerWidth(true);
+	var w = $(selector).outerWidth(true);
 	var l = (pw - w) / 2;
+	//$(selector).css('margin','0');
 	$(selector).css('left', l + 'px');
 }
 var handleMoreInfoLocation = function(){
-	//centerDiv('.more-info');
 	var linksHeight = $('.links').position().top;
 	var height = $(window).height();
 	//if the links are more than halfway down the page, then the fun begins
@@ -46,7 +46,8 @@ $(document).ready(function(){
 				       .width((maxHeight / 235 * 313) + 'px');
 					//and then calculate width
 		$('.links').addClass('inPic');
-		$('.more-info').css('maxWidth', ((maxHeight / 235 * 313) + 'px'));
+		//$('.more-info').css('width', ((maxHeight / 235 * 313) - 20 + 'px'));
+		//centerDiv('.more-info');
 	} else { //otherwise, just set the height
 		$('div.status-display').height(imgHeight + 'px');
 	}
@@ -56,7 +57,7 @@ $(document).ready(function(){
 	//bottom button handling
 	$('.links div').on('click',function(){
 		//link of the button we clicked
-		var clickeduri = $(this).attr('data-uri');
+		var clickeduri = $(this).attr('data-uri').substr(1);
 		//where to put the information
 		var wrapper = 'div.more-info';
 
@@ -67,26 +68,36 @@ $(document).ready(function(){
 			$(wrapper).removeClass(clickeduri);
 			$(this).removeClass('active');
 			$('.moreInfoOverlay').removeClass('moreInfoOverlay');
+			if(imgHeight > maxHeight){
+				$('.links').addClass('inPic');
+				centerDiv('.links');
+			}
 		}else{ 
 			handleMoreInfoLocation();
+			//$('.more-info').width($('.status-display').width() - 60 + 'px');
+		//took out 60 here because it got too small on mobile.  should be same width as status-display
+			$('.more-info').width($('.status-display').width() + 'px');
+			centerDiv('.more-info');
 			//otherwise, load the page
 			$(wrapper).load(clickeduri, function(){
 				$(this).ready(function(){
+					/*
 					if(clickeduri == '/admin') {
 						$('.more-info').width($('div.status-display').width() - 20 + 'px');
 					} else {
 						$('.more-info').removeProp('width');
 					}
+					*/
 				});
 			});
 			$('.links div').removeClass('active');
 			$(this).addClass('active');
+			$('.links').removeClass('inPic');
+			centerDiv('.links');
 			$(wrapper).removeClass('howto')
 				  .removeClass('admin')
 				  .removeClass('money')
-				  .addClass(clickeduri.substr(1));
-			if($(window).height() < $('body').height())
-				$(window).scrollTo('.links');
+				  .addClass(clickeduri);
 		}
 	});
 });

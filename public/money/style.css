@@ -3,7 +3,7 @@
 }
 p {
 	margin: 10px;
-	float: right;
+	display: inline-block;
 	width: 55%;
 	text-align: justify;
 }

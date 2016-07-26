@@ -1,6 +1,6 @@
 .admin-content {
 	display: table;
-	margin: auto;
+	margin: 20px auto;
 }
 .status-btns {
 	display:inline-block;
@@ -25,11 +25,15 @@
 }
 .status-btns .open:hover,
 .status-btns .open.active {
-	       color: #85df7e;
-	border-color: #85df7e;
+	       color: rgb(100,160,100);
+	border-color: rgb(100,160,100);
 }
 .status-btns .closed:hover,
 .status-btns .closed.active {
-	       color: #df5737;
-	border-color: #df5737;
+	       color: rgb(160,100,100);
+	border-color: rgb(160,100,100);
+}
+.pass-contain {
+	margin: auto;
+	display: table;
 }
