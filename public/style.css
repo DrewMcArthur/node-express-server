@@ -43,22 +43,19 @@ body {
 	cursor: pointer;
 	text-align: center;
 	padding: 5px;
-	margin: 8px;
+	margin: 3px 8px;
 	font-size: 2em;
 }
 .links div.active,
 .links div:hover {
 	padding: 8px;
-	margin: 5px;
+	margin: 0 5px;
 	color: #222;
 	border-color: #222;
 }
 .more-info {
-	margin: 20px auto;
-	padding: 20px;
-	position: fixed;
-	bottom: 0;
-	display: inline-block;
+	margin: 80px auto;
+	padding: 10px;
 	-webkit-transition: top 0.5s;
 		transition: top 0.5s;
 }
@@ -81,4 +78,6 @@ body {
 }
 .more-info.moreInfoOverlay {
 	top: 12em;
+	position: fixed;
+	margin: 20px;
 }

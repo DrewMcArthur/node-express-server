@@ -17,9 +17,10 @@ var toggleCausewayStatus = function(){
 }
 var centerDiv = function(selector){
 	//given a selector, this centers the div within its parent using left
-	var pw = $(selector).parent().width();
+	//var pw = $(selector).parent().width();
+	var pw = $(window).width();
 	var w = $(selector).width();
-	var l = (pw - w) / 2
+	var l = (pw - w) / 2;
 	$(selector).css('left', l + 'px');
 }
 var handleMoreInfoLocation = function(){
@@ -71,16 +72,19 @@ $(document).ready(function(){
 			//otherwise, load the page
 			$(wrapper).load(clickeduri, function(){
 				$(this).ready(function(){
-					if($(wrapper).hasClass('admin'))
-						centerDiv(wrapper);
+					if(clickeduri == '/admin') {
+						$('.more-info').width($('div.status-display').width() - 20 + 'px');
+					} else {
+						$('.more-info').removeProp('width');
+					}
 				});
 			});
 			$('.links div').removeClass('active');
 			$(this).addClass('active');
-			$(wrapper).removeClass('/howto')
-				  .removeClass('/admin')
-				  .removeClass('/money')
-				  .addClass(clickeduri);
+			$(wrapper).removeClass('howto')
+				  .removeClass('admin')
+				  .removeClass('money')
+				  .addClass(clickeduri.substr(1));
 			if($(window).height() < $('body').height())
 				$(window).scrollTo('.links');
 		}

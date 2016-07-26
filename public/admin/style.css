@@ -1,3 +1,7 @@
+.admin-content {
+	display: table;
+	margin: auto;
+}
 .status-btns {
 	display:inline-block;
 }
