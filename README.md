@@ -1,5 +1,9 @@
-Chat Application using node, express, and socket.io
+template for socket connections using node, express, and socket.io
 ===================
+
+This repo is not functional, and solely exists as an example with sample lines 
+of code that explain the basic structure of such an app without implementing
+the functions themselves.
 
 A How To for the setup. 
 
