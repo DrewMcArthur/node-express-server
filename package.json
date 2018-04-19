@@ -5,11 +5,14 @@
   "version": "0.0.1",
   "bugs": "https://github.com/DrewMcArthur/node-express-server/issues",
   "author": "Drew McArthur <drewmcarthur1+chatapp@gmail.com> (https://github.com/DrewMcArthur)",
+  "repo": "https://github.com/DrewMcArthur/node-express-server/",
   "private": false,
   "dependencies": {
     "express": "latest",
-    "socket.io": "latest",
+    "facebook-chat-api": "^1.5.1",
     "less": "latest",
-    "mysql": "latest"
+    "mysql": "latest",
+    "npm": "^5.8.0",
+    "socket.io": "latest"
   }
 }
