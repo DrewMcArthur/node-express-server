@@ -1,10 +1,10 @@
 {
-    "name": "node-webserver"
-  , "version": "0.0.1"
-  , "private": false
-  , "dependencies": {
-      "express": "4.9.4",
-      "socket.io":  "~1.1.0",
-      "less":"latest"
-  }
+    "name": "node-webserver",
+    "version": "0.0.1",
+    "private": false,
+    "dependencies": {
+        "express": "4.9.4",
+        "socket.io": "~1.1.0",
+        "less": "latest"
+    }
 }
